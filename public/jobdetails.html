@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Details Form</title>
+    <style>
+        body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    color: #333;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.container {
+    display: flex;
+    width: 100%;
+    margin-left: 290px;
+    max-width: 1200px;
+    margin-top: 450px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+    box-sizing: border-box;
+    padding: 45px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.main-content {
+    width: 100%;
+    padding: 20px;
+    background-color: #f5f5f5;
+}
+
+.form {
+    width: 100%;
+}
+
+.form h2 {
+    margin-top: 0;
+}
+
+.form label {
+    display: block;
+    margin: 10px 0 5px;
+}
+
+.form input, .form textarea, .form select {
+    width: 98%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.form .salary-range {
+    display: flex;
+    justify-content: space-between;
+    gap: 0; /* Decreased gap between min and max salary input fields */
+}
+
+.form .salary-range input {
+    width: 50%; /* Increased width of salary input boxes */
+}
+
+.form .button-group {
+    display: flex;
+    padding-top: 30px;
+    justify-content: center;
+    gap: 0; /* Added spacing between buttons */
+}
+
+.form .button-group button {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.form .button-group .save-button {
+    background-color: #005960;
+    color: #fff;
+}
+
+.form .button-group .save-button:hover {
+    background-color: #00454a; /* Darker teal on hover */
+}
+
+.error-message {
+    color: red;
+    font-size: 0.9em;
+    margin-top: 5px;
+}
+
+/* Responsive adjustments */
+@media screen and (max-width: 768px) {
+    .container {
+        width: 100%;
+    }
+} 
+    </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+    const fields = ['job-title', 'job-description', 'skills', 'qualifications', 'mode', 'type', 'salary-min', 'salary-max'];
+
+    fields.forEach(field => {
+        const inputElement = document.getElementById(field);
+        inputElement.addEventListener('keyup', function() {
+            const errorElement = document.getElementById(field + '-error');
+            if (errorElement && this.value.trim().length > 0) {
+                errorElement.textContent = '';
+            }
+        });
+    });
+});
+
+function saveJobDetails() {
+    // Clear previous error messages
+    const errorMessages = document.querySelectorAll('.error-message');
+    errorMessages.forEach(error => error.textContent = '');
+
+    // Retrieve input values
+    const jobTitle = document.getElementById('job-title').value.trim();
+    const jobDescription = document.getElementById('job-description').value.trim();
+    const skills = document.getElementById('skills').value.trim();
+    const qualifications = document.getElementById('qualifications').value.trim();
+    const mode = document.getElementById('mode').value;
+    const type = document.getElementById('type').value;
+    const salaryMin = parseInt(document.getElementById('salary-min').value);
+    const salaryMax = parseInt(document.getElementById('salary-max').value);
+
+    // Validation function
+    function validateField(fieldId, errorMessage) {
+        const field = document.getElementById(fieldId);
+        const errorField = document.getElementById(fieldId + '-error');
+        if (!field.value.trim() || (fieldId === 'salary-min' && isNaN(salaryMin)) || (fieldId === 'salary-max' && isNaN(salaryMax))) {
+            if (errorField) {
+                errorField.textContent = errorMessage;
+            }
+            field.focus();
+            return false;
+        }
+        return true;
+    }
+
+    // Check each field consecutively and stop at the first empty field
+    if (!validateField('job-title', 'Please enter the job title.')) return;
+    if (!validateField('job-description', 'Please enter the job description.')) return;
+    if (!validateField('skills', 'Please enter the skills required.')) return;
+    if (!validateField('qualifications', 'Please enter the educational qualifications.')) return;
+    if (!validateField('mode', 'Please select the preferred mode.')) return;
+    if (!validateField('type', 'Please select the type.')) return;
+    if (!validateField('salary-min', 'Please enter the minimum salary.')) return;
+    if (!validateField('salary-max', 'Please enter the maximum salary.')) return;
+
+    // Create a job object
+    const jobDetails = {
+        jobTitle,
+        jobDescription,
+        skills,
+        qualifications,
+        mode,
+        type,
+        salaryMin,
+        salaryMax
+    };
+
+    // Send the job details to the server
+    fetch('/save-job', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(jobDetails)
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log('Job details saved to MongoDB:', data);
+        alert('Job details saved successfully!');
+        document.getElementById('job-details-form').reset();
+    })
+    .catch(error => {
+        console.error('Error saving job details:', error);
+        alert('Error saving job details. Please try again.');
+    });
+}
+    </script>
+    <script>
+        function loadHTML(id, url) {
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', url, true);
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    document.getElementById(id).innerHTML = xhr.responseText;
+                    // Initialize dropdowns after sidebar is loaded
+                    if (id === 'sidebar-placeholder') {
+                        initializeDropdowns();
+                    }
+                }
+            };
+            xhr.send();
+        }
+
+        function initializeDropdowns() {
+            console.log('Initializing dropdowns...');
+            var dropdowns = document.querySelectorAll('.dropdown-btn');
+            dropdowns.forEach(function(dropdown) {
+                dropdown.addEventListener('click', function() {
+                    this.classList.toggle('active');
+                    var dropdownContent = this.nextElementSibling;
+                    if (dropdownContent.style.display === 'block') {
+                        dropdownContent.style.display = 'none';
+                    } else {
+                        dropdownContent.style.display = 'block';
+                    }
+                });
+            });
+            console.log('Dropdowns initialized');
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            loadHTML('navbar-placeholder', 'navbar.html');
+            loadHTML('sidebar-placeholder', 'sidebar.html');
+        });
+    </script>
+</head>
+<body>
+    <div id="navbar-placeholder"></div>
+    <div id="sidebar-placeholder"></div>
+    <div class="container">
+        <div class="main-content">
+            <form class="form" id="job-details-form">
+                <h2>Job Details</h2>
+                <label for="job-title">Job Title</label>
+                <input type="text" id="job-title" name="job-title" required>
+                <div id="job-title-error" class="error-message"></div>
+
+                <label for="job-description">Job Description</label>
+                <textarea id="job-description" name="job-description" rows="4" required></textarea>
+                <div id="job-description-error" class="error-message"></div>
+
+                <label for="skills">Skill Requirements</label>
+                <textarea id="skills" name="skills" rows="4" required></textarea>
+                <div id="skills-error" class="error-message"></div>
+
+                <label for="qualifications">Educational Qualifications</label>
+                <textarea id="qualifications" name="qualifications" rows="4" required></textarea>
+                <div id="qualifications-error" class="error-message"></div>
+
+                <label for="mode">Preferred Mode</label>
+                <select id="mode" name="mode" required>
+                    <option value="online">Online</option>
+                    <option value="offline">Offline</option>
+                </select>
+                <div id="mode-error" class="error-message"></div>
+
+                <label for="type">Type</label>
+                <select id="type" name="type" required>
+                    <option value="part-time">Part Time</option>
+                    <option value="full-time">Full Time</option>
+                </select>
+                <div id="type-error" class="error-message"></div>
+
+                <label for="salary-min">Salary Range (Minimum - Maximum)</label>
+                <div class="salary-range">
+                    <div>
+                        <input type="number" id="salary-min" name="salary-min" placeholder="Min" required>
+                        <div id="salary-min-error" class="error-message"></div>
+                    </div>
+                    <div>
+                        <input type="number" id="salary-max" name="salary-max" placeholder="Max" required>
+                        <div id="salary-max-error" class="error-message"></div>
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button type="button" class="save-button" onclick="saveJobDetails()">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

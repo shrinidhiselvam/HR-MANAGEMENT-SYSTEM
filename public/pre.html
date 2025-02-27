@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personal Info</title>
+    <!-- Link your CSS file here -->
+    <link rel="stylesheet" href="path/to/your/stylesheet.css">
+</head>
+<body>
+    <h1><span> Form Input </span> Samples</h1>
+    <p>Intro/Javascript</p>
+    <article class="regular">
+        <h2>Textbox</h2>
+        <label for="tbuser">Username:</label>
+        <input type="text" id="tbuser" placeholder="Enter username" maxlength="10">
+        <!-- Corrected button ID and added closing tag -->
+        <input type="button" id="btn1" value="Click me">
+        <p class="output" id="output1"></p>
+    </article>
+    <script>
+        const txt1 = document.getElementById('tbuser');
+        const btn1 = document.getElementById('btn1'); // Corrected button ID
+        const out1 = document.getElementById('output1');
+
+        function fun1() {
+            out1.innerHTML = txt1.value;
+        }
+
+        btn1.addEventListener('click', fun1);
+    </script>
+</body>
+</html>

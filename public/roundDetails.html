@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Round Display</title>
+    <style>
+        /* General styling */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    color: #333;
+}
+
+/* Container Styles */
+.container {
+    display: flex;
+    height: 100%;
+    width: 90%;
+    margin-left: 240px;
+    padding-top: 30px; /* Adjust padding to account for fixed header */
+}
+
+
+/* Main content styling */
+.main-content {
+    width: 80%;
+    padding: 150px;
+    background-color: white;
+    overflow-y: auto;
+}
+
+/* Heading and summary */
+h2 {
+    margin-top: 0;
+    font-size: 28px;
+    border-bottom: 2px solid #094b5f; /* Updated to match button color */
+    padding-bottom: 10px;
+    color: #094b5f; /* Updated to match button color */
+}
+
+#round-summary {
+    background-color: #ecf0f1;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
+}
+
+/* Rounds table styling */
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+table, th, td {
+    border: 1px solid #bdc3c7;
+}
+
+th, td {
+    padding: 15px;
+    text-align: left;
+}
+
+th {
+    background-color: #094b5f; /* Updated to match button color */
+    color: white;
+    text-transform: uppercase;
+}
+
+td {
+    background-color: #f9f9f9;
+}
+
+tr:nth-child(even) td {
+    background-color: #ecf0f1;
+}
+
+/* Actions styling */
+.action-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.action-buttons button {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.action-buttons button.edit {
+    background-color: #f39c12;
+    color: white;
+}
+
+.action-buttons button.delete {
+    background-color: #e74c3c;
+    color: white;
+}
+
+.action-buttons button:hover {
+    opacity: 0.8;
+}
+
+/* Direct to selection button styling */
+#direct-to-selection {
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
+}
+
+#selection-button {
+    padding: 15px 30px;
+    font-size: 18px;
+    background-color: #094b5f; /* Updated to match button color */
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#selection-button:hover {
+    background-color: #287289; /* Updated hover color */
+}
+    </style>
+</head>
+<body>
+    <div id="navbar-placeholder"></div>
+    <div id="sidebar-placeholder"></div>
+
+    <div class="container">
+        <div class="main-content">
+            <div id="round-summary">
+                <h2 id="round-title">Round Details for HR</h2>
+                <div id="round-details"></div> <!-- Placeholder for round details -->
+                <div id="grading-system"></div> <!-- Placeholder for grading system -->
+            </div>
+            <table id="applicants-table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Role Applied</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Applicants will be dynamically inserted here -->
+                </tbody>
+            </table>
+            <div id="direct-to-selection">
+                <button id="selection-button">Direct to Selection Process</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const role = urlParams.get('role') || 'HR'; // Default to HR if role not provided
+    
+            // Function to fetch round details
+            const fetchRoundDetails = async (role) => {
+                try {
+                    const response = await fetch(`/getRoundDetails?role=${role}`);
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    const data = await response.json();
+                    displayRoundDetails(data);
+                } catch (error) {
+                    console.error('Error fetching round details:', error);
+                }
+            };
+    
+            /// Function to display round details
+const displayRoundDetails = (details) => {
+    const roundDetailsContainer = document.getElementById('round-details');
+    roundDetailsContainer.innerHTML = ''; // Clear previous details
+
+    if (details && details.rounds) {
+        details.rounds.forEach((round, index) => {
+            const roundInfo = document.createElement('div');
+            roundInfo.innerHTML = `
+                <h3>Round ${index + 1}: ${round.description}</h3>
+                <div id="sectionsForRound${index}">
+                    ${round.sections && round.sections.length > 0
+                        ? round.sections.map((section, sectionIndex) => `
+                            <div class="section">
+                                <p>Section ${sectionIndex + 1}: ${section.section} (Minimum marks: ${section.passMarks})</p>
+                            </div>
+                        `).join('')
+                        : ''
+                    }
+                </div>
+            `;
+            roundDetailsContainer.appendChild(roundInfo);
+        });
+    } else {
+        roundDetailsContainer.innerHTML = 'No round details found for this role.';
+    }
+};
+
+            // Function to fetch grading system
+            const fetchGradingSystem = async (role) => {
+                try {
+                    const response = await fetch(`/getGradingSystem?role=${role}`);
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    const data = await response.json();
+                    displayGradingSystem(data);
+                } catch (error) {
+                    console.error('Error fetching grading system:', error);
+                }
+            };
+    
+            // Function to display grading system
+            const displayGradingSystem = (gradingSystem) => {
+                const gradingContainer = document.getElementById('grading-system');
+                gradingContainer.innerHTML = ''; // Clear previous grading system
+    
+                if (gradingSystem && gradingSystem.gradingSystem) {
+                    gradingSystem.gradingSystem.forEach((grade) => {
+                        const gradeInfo = document.createElement('div');
+                        gradeInfo.innerHTML = `<p>${grade.label}: ${grade.min} - ${grade.max}</p>`;
+                        gradingContainer.appendChild(gradeInfo);
+                    });
+                }
+            };
+    
+            // Function to fetch applicants
+            const fetchApplicants = async (role) => {
+                try {
+                    const response = await fetch(`/getApplicantsForRole?role=${role}`);
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    const data = await response.json();
+                    displayApplicants(data);
+                } catch (error) {
+                    console.error('Error fetching applicants:', error);
+                }
+            };
+    
+            // Function to display applicants in the table
+            const displayApplicants = (applicants) => {
+                const applicantsTable = document.getElementById('applicants-table').querySelector('tbody');
+                applicantsTable.innerHTML = ''; // Clear previous applicants
+    
+                applicants.forEach(applicant => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${applicant.name}</td>
+                        <td>${applicant.email}</td>
+                        <td>${applicant.role}</td>
+                    `;
+                    applicantsTable.appendChild(row);
+                });
+            };
+    
+            // Fetch round details, grading system, and applicants for the role
+            fetchRoundDetails(role);
+            fetchGradingSystem(role);
+            fetchApplicants(role);
+    
+            // Set round title
+            document.getElementById('round-title').textContent = `Round Details for ${role}`;
+    
+            // Event listener for Direct to Selection Process button
+            const selectionButton = document.getElementById('selection-button');
+            selectionButton.addEventListener('click', () => {
+                window.location.href = `/round1.html?role=${role}`;
+            });
+        });
+    </script>
+        <script>
+            function loadHTML(id, url) {
+                var xhr = new XMLHttpRequest();
+                xhr.open('GET', url, true);
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState == 4 && xhr.status == 200) {
+                        document.getElementById(id).innerHTML = xhr.responseText;
+                        // Initialize dropdowns after sidebar is loaded
+                        if (id === 'sidebar-placeholder') {
+                            initializeDropdowns();
+                        }
+                    }
+                };
+                xhr.send();
+            }
+    
+            function initializeDropdowns() {
+                console.log('Initializing dropdowns...');
+                var dropdowns = document.querySelectorAll('.dropdown-btn');
+                dropdowns.forEach(function(dropdown) {
+                    dropdown.addEventListener('click', function() {
+                        this.classList.toggle('active');
+                        var dropdownContent = this.nextElementSibling;
+                        if (dropdownContent.style.display === 'block') {
+                            dropdownContent.style.display = 'none';
+                        } else {
+                            dropdownContent.style.display = 'block';
+                        }
+                    });
+                });
+                console.log('Dropdowns initialized');
+            }
+    
+            document.addEventListener('DOMContentLoaded', function() {
+                loadHTML('navbar-placeholder', 'navbar.html');
+                loadHTML('sidebar-placeholder', 'sidebar.html');
+            });
+        </script>
+    
+</body>
+</html>

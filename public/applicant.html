@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skills Inventory Input</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh; /* Ensure full viewport height */
+        }
+    
+        /* Container Styles */
+        .container {
+            width: 100%;
+            box-shadow: 0 10px 10px rgba(0, 0, 0, 0.1);
+            background-color: #fff;
+            box-sizing: border-box;
+            display: flex;
+            padding-left: 300px;
+            flex-direction: column; /* Adjusted for column layout */
+            justify-content: center;
+            align-items: center;
+            margin-top: 80px; /* Added margin to avoid overlap with fixed header */
+        }
+    
+        .main-content {
+            flex: 1;
+            padding: 20px;
+            background-color: #f4f4f4;
+            width: 100%;
+        }
+    
+        .form {
+            width: 100%; /* Ensure form fills container */
+            padding: 20px;
+            box-sizing: border-box;
+        }
+    
+        .form h2 {
+            margin-top: 0;
+            font-size: 24px;
+        }
+    
+        .form label {
+            display: block;
+            margin: 10px 0 5px;
+            font-size: 16px;
+        }
+    
+        .form input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+    
+        .form .button-group {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 30px;
+        }
+    
+        .form .button-group button {
+            flex: 1; /* Make buttons take full width */
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+    
+        .form .button-group .save-button {
+            background-color: #00454a;
+            color: #fff;
+        }
+    
+        .form .button-group .save-button:hover {
+            background-color: #00596a;
+        }
+    
+        .error-message {
+            color: red;
+            font-size: 14px;
+            margin-top: 4px;
+        }
+    
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .container {
+                width: 90%;
+                height: auto;
+            }
+    
+            .form input,
+            .form .button-group button {
+                font-size: 14px;
+                padding: 8px;
+            }
+    
+            .form .button-group button {
+                width: auto; /* Adjusted to accommodate content */
+            }
+        }
+    </style>
+    
+</head>
+<body>
+    <div id="navbar-placeholder"></div>
+    <div id="sidebar-placeholder"></div>
+    <div class="container">
+        <div class="main-content">
+            <form id="applicant-form" class="form">
+                <h2>Skills Inventory Input</h2>
+
+                <div class="input-group">
+                    <label for="name">Applicant Name</label>
+                    <input type="text" id="name" name="name" placeholder="Enter the name" required>
+                    <div class="error-message" id="name-error"></div>
+                </div>
+
+                <div class="input-group">
+                    <label for="skills">Applicant Skills</label>
+                    <input type="text" id="skills" name="skills" placeholder="e.g. Javascript, HTML, CSS" required>
+                    <div class="error-message" id="skills-error"></div>
+                </div>
+
+                <div class="input-group">
+                    <label for="languages">Programming Languages Known</label>
+                    <input type="text" id="languages" name="languages" placeholder="e.g. C, C++, Java" required>
+                    <div class="error-message" id="languages-error"></div>
+                </div>
+
+                <div class="input-group">
+                    <label for="domain">Fields of expertise</label>
+                    <input type="text" id="domain" name="domain" placeholder="e.g. Machine Learning" required>
+                    <div class="error-message" id="domain-error"></div>
+                </div>
+
+                <div class="input-group">
+                    <label for="recruitment">Experience</label>
+                    <input type="number" id="recruitment" name="recruitment" placeholder="in years" required>
+                    <div class="error-message" id="recruitment-error"></div>
+                </div>
+
+                <div class="button-group">
+                    <button type="button" class="save-button" onclick="saveApplicant()">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+    const saveButton = document.querySelector('.save-button');
+
+    if (saveButton) {
+        saveButton.addEventListener('click', async () => {
+            const name = document.getElementById('name').value.trim();
+            const skills = document.getElementById('skills').value.trim();
+            const languages = document.getElementById('languages').value.trim();
+            const domain = document.getElementById('domain').value.trim();
+            const experience = document.getElementById('recruitment').value.trim();
+
+            // Clear previous error messages
+            clearErrorMessages();
+
+            let isValid = true;
+
+            if (!name) {
+                isValid = false;
+                displayErrorMessage('name', 'Applicant Name is required.');
+            }
+            if (name && !skills) {
+                isValid = false;
+                displayErrorMessage('skills', 'Applicant Skills are required.');
+            }
+            if (skills && !languages) {
+                isValid = false;
+                displayErrorMessage('languages', 'Programming Languages Known are required.');
+            }
+            if (languages && !domain) {
+                isValid = false;
+                displayErrorMessage('domain', 'Fields of expertise are required.');
+            }
+            if (domain && !experience) {
+                isValid = false;
+                displayErrorMessage('recruitment', 'Experience is required.');
+            }
+
+            // If any field is invalid, prevent further processing
+            if (!isValid) {
+                return;
+            }
+
+            const data = { name, skills, languages, domain, experience };
+
+            try {
+                const response = await fetch('/saveApplicant', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data),
+                });
+
+                if (response.ok) {
+                    alert('Applicant saved successfully');
+                    document.getElementById('applicant-form').reset();
+                } else {
+                    alert('Error saving applicant');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error saving applicant');
+            }
+        });
+    }
+
+    // Function to clear error messages
+    function clearErrorMessages() {
+        const errorElements = document.querySelectorAll('.error-message');
+        errorElements.forEach(element => element.textContent = '');
+    }
+
+    // Function to display error message
+    function displayErrorMessage(fieldId, message) {
+        const errorContainer = document.getElementById(`${fieldId}-error`);
+        errorContainer.textContent = message;
+    }
+
+    const applicantListContainer = document.getElementById('applicant-list');
+
+    if (applicantListContainer) {
+        fetch('/getApplicants')
+            .then(response => response.json())
+            .then(applicants => {
+                if (applicants.length > 0) {
+                    applicants.forEach(applicant => {
+                        displayApplicantDetails(applicant);
+                    });
+                } else {
+                    applicantListContainer.innerHTML = '<p>No applicants found.</p>';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                applicantListContainer.innerHTML = '<p>Error retrieving applicants.</p>';
+            });
+    }
+
+    function displayApplicantDetails(applicant) {
+        const applicantDetails = document.createElement('div');
+        applicantDetails.classList.add('applicant-details');
+        applicantDetails.innerHTML = `
+            <h3>${applicant.name}</h3>
+            <p><strong>Skills:</strong> ${applicant.skills}</p>
+            <p><strong>Languages:</strong> ${applicant.languages}</p>
+            <p><strong>Domain:</strong> ${applicant.domain}</p>
+            <p><strong>Experience:</strong> ${applicant.experience} years</p>
+        `;
+        applicantListContainer.appendChild(applicantDetails);
+    }
+});
+
+    </script>
+    <script>
+        function loadHTML(id, url) {
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', url, true);
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    document.getElementById(id).innerHTML = xhr.responseText;
+                    // Initialize dropdowns after sidebar is loaded
+                    if (id === 'sidebar-placeholder') {
+                        initializeDropdowns();
+                    }
+                }
+            };
+            xhr.send();
+        }
+
+        function initializeDropdowns() {
+            console.log('Initializing dropdowns...');
+            var dropdowns = document.querySelectorAll('.dropdown-btn');
+            dropdowns.forEach(function(dropdown) {
+                dropdown.addEventListener('click', function() {
+                    this.classList.toggle('active');
+                    var dropdownContent = this.nextElementSibling;
+                    if (dropdownContent.style.display === 'block') {
+                        dropdownContent.style.display = 'none';
+                    } else {
+                        dropdownContent.style.display = 'block';
+                    }
+                });
+            });
+            console.log('Dropdowns initialized');
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            loadHTML('navbar-placeholder', 'navbar.html');
+            loadHTML('sidebar-placeholder', 'sidebar.html');
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Final Results</title>
+    <style>
+        * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f2f5;
+    padding: 80px 20px 20px 20px; /* Top padding for space from the header */
+}
+
+/* Header Styles */
+.header {
+    width: 100%;
+    padding: 20px; /* Increased padding for height */
+    background-color: #094b5f; /* Blue color */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    z-index: 1000;
+}
+
+.header button {
+    margin-left: 10px;
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #fff; /* White background */
+    color: #000; /* Black text */
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.header button:hover {
+    background-color: #287289; /* Updated hover color */
+    color: #fff; /* Text color on hover */
+}
+
+/* Page heading */
+h1 {
+    margin-bottom: 40px; /* Margin to push content down */
+    text-align: center;
+    color: #094b5f; /* Blue color */
+}
+
+/* Applicants container */
+#applicants-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px; /* Spacing between applicant cards */
+    justify-content: center;
+    max-width: 1200px; /* Added max width */
+    margin: 0 auto; /* Center container horizontally */
+    padding: 20px; /* Padding for inner spacing */
+}
+
+/* Applicant card styling */
+.applicant {
+    border: 1px solid #ccc;
+    padding: 20px;
+    border-radius: 8px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 350px; /* Limit width for better layout */
+    text-align: left;
+    transition: transform 0.3s;
+    flex: 1 1 calc(33.33% - 40px); /* Three cards per row */
+    margin-bottom: 20px; /* Added margin bottom for spacing */
+}
+
+.applicant:hover {
+    transform: scale(1.02);
+}
+
+/* Role assign button styling */
+button {
+    margin-top: 10px;
+    padding: 10px 15px;
+    background-color: #094b5f; /* Blue color */
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #287289; /* Darker shade of blue */
+}
+
+/* Role select dropdown */
+select {
+    margin-top: 10px;
+    padding: 8px;
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #fff;
+    color: #000;
+}
+
+select:focus {
+    border-color: #094b5f; /* Focus border color */
+    outline: none;
+}
+
+/* Specific styles for error messages or alerts */
+.alert {
+    color: red;
+    font-size: 14px;
+    margin-top: 10px;
+}
+
+
+
+    </style>
+</head>
+<body>
+    <h1>Role Assignment</h1>
+    <div id="applicants-container">
+        <!-- Applicants and roles will be populated here -->
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const container = document.getElementById('applicants-container');
+            const urlParams = new URLSearchParams(window.location.search);
+            const role = urlParams.get('role');
+        
+            if (!role) {
+                alert('Role parameter is missing');
+                return;
+            }
+        
+            try {
+                const resultsResponse = await fetch(`/finalResults?role=${encodeURIComponent(role)}`);
+                if (!resultsResponse.ok) {
+                    throw new Error(`Failed to fetch final results: ${resultsResponse.status} ${resultsResponse.statusText}`);
+                }
+                const { passedApplicants, roles } = await resultsResponse.json();
+                container.innerHTML = '';
+        
+                if (passedApplicants.length > 0) {
+                    passedApplicants.forEach(applicant => {
+                        const applicantDiv = document.createElement('div');
+                        applicantDiv.className = 'applicant';
+        
+                        const roleSelect = document.createElement('select');
+                        roleSelect.id = `role-${applicant._id}`;
+        
+                        if (roles && roles.length > 0) {
+                            roles.forEach(roleObj => {
+                                const option = document.createElement('option');
+                                option.value = roleObj.role;
+                                option.textContent = roleObj.role;
+                                roleSelect.appendChild(option);
+                            });
+                        } else {
+                            const option = document.createElement('option');
+                            option.value = '';
+                            option.textContent = 'No roles available';
+                            roleSelect.appendChild(option);
+                        }
+        
+                        applicantDiv.innerHTML = `
+                            <h2>${applicant.name}</h2>
+                            <p>Email: ${applicant.email}</p>
+                            <p>Role: ${applicant.role}</p>
+                            <label for="role-${applicant._id}">Assign New Role:</label>
+                        `;
+        
+                        applicantDiv.appendChild(roleSelect);
+        
+                        const button = document.createElement('button');
+                        button.textContent = 'Assign Role';
+                        button.onclick = () => assignRole(applicant._id);
+                        applicantDiv.appendChild(button);
+        
+                        container.appendChild(applicantDiv);
+                    });
+                } else {
+                    container.innerHTML = '<p>No applicants found for final results.</p>';
+                }
+            } catch (error) {
+                console.error('Error loading final results:', error);
+                alert(`Error loading final results: ${error.message}`);
+            }
+        });
+        
+        async function assignRole(applicantId) {
+    const selectedRole = document.getElementById(`role-${applicantId}`).value;
+    
+    try {
+        const response = await fetch('/assignRole', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ applicantId, selectedRole })
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to assign role');
+        }
+
+        const result = await response.json();
+        alert('Role assigned successfully');
+        console.log('Role assigned:', result);
+    } catch (error) {
+        console.error('Error assigning role:', error);
+        alert('Error assigning role');
+    }
+}
+
+
+
+        </script>
+        
+    
+</body>
+</html>

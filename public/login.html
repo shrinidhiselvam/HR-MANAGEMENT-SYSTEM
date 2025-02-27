@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background: url('login.jpg') no-repeat center center fixed;
+            background-size: cover;
+        }
+
+        .container {
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(231, 149, 225, 0.1);
+            width: 300px;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+            text-align: center;
+            color: #2f2a2a;
+        }
+        
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .input-group input {
+            width: calc(100% - 30px); /* Adjusted width to fit within the container */
+            padding: 10px;
+            box-sizing: border-box;
+            border: 1px solid #094b5f;
+            border-radius: 3px;
+        }
+
+        .input-group .visibility-toggle {
+            position: relative;
+            margin-left: -30px;
+            width: 30px;
+            line-height: 40px;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #094b5f;
+            border: none;
+            border-radius: 3px;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #073944;
+        }
+
+        #error-message {
+            color: red;
+            margin-top: 10px;
+            text-align: center;
+        }
+
+        .remember-forgot {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .remember-forgot label {
+            margin-bottom: 0;
+        }
+
+        .forgot-password-link {
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .forgot-password-link span {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #094b5f;
+            text-decoration: underline;
+        }
+
+        .forgot-password-link span:hover {
+            text-decoration: underline;
+        }
+
+        .register-link {
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .register-link button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #094b5f;
+            text-decoration: underline;
+        }
+
+        .register-link button:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="login-container">
+        <h2>LOGIN</h2>
+        <form id="loginForm">
+            <div class="input-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            <div class="input-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required>
+                <span class="visibility-toggle" id="password-toggle" onclick="togglePasswordVisibility('password')">
+                    <i class="fa fa-eye" id="eye-icon"></i>
+                </span>
+            </div>
+            <div class="remember-forgot">
+                <label><input type="checkbox"> Remember Me</label>
+                <div class="forgot-password-link">
+                    <span id="forgotPasswordBtn">Forgot Password?</span>
+                </div>
+            </div>
+            <button type="submit">Login</button>
+        </form>
+        <div id="error-message"></div>
+        <div class="register-link">
+            <button id="registerRedirectBtn">Create New Account</button>
+        </div>
+    </div>
+    <script>
+        function togglePasswordVisibility(id) {
+            var passwordField = document.getElementById(id);
+            var eyeIcon = document.getElementById('eye-icon');
+
+            if (passwordField.type === "password") {
+                passwordField.type = "text";
+                eyeIcon.classList.remove('fa-eye');
+                eyeIcon.classList.add('fa-eye-slash');
+            } else {
+                passwordField.type = "password";
+                eyeIcon.classList.remove('fa-eye-slash');
+                eyeIcon.classList.add('fa-eye');
+            }
+        }
+
+        document.getElementById('loginForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            var username = document.getElementById('username').value;
+            var password = document.getElementById('password').value;
+            var errorMessage = document.getElementById('error-message');
+            
+            fetch('/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ username: username, password: password })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.message === "Login successful") {
+                    localStorage.setItem('username', username); // Store username in localStorage
+                    window.location.href = 'dashboard.html'; // Redirect to the next page on successful login
+                } else {
+                    errorMessage.textContent = data.message || "Login failed";
+                }
+            })
+            .catch(error => {
+                errorMessage.textContent = "An error occurred: " + error.message;
+            });
+        });
+
+        document.getElementById('registerRedirectBtn').addEventListener('click', function() {
+            window.location.href = 'register.html';
+        });
+
+        document.getElementById('forgotPasswordBtn').addEventListener('click', function() {
+            alert("Redirecting to forgot password page...");
+            window.location.href = 'forgotpassword.html';
+        });
+    </script>
+</body>
+</html>

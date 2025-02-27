@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Applicant</title>
+    <style>
+        /* General Styles */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f2f5;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    height: 200vh;
+    margin: 0;
+}
+
+/* Header Styles */
+.header {
+    width: 100%;
+    padding: 20px 20px; /* Increased padding for height */
+    background-color: #094b5f; /* Blue color */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    z-index: 1000;
+}
+
+.header button {
+    margin-left: 10px;
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #fff; /* White background */
+    color: #000; /* Black text */
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.header button:hover {
+    background-color: #287289; /* Updated hover color */
+    color: #fff; /* Text color on hover */
+}
+
+/* Container Styles */
+.container {
+    margin-top: 200px; /* Adjusted margin for centering */
+    padding: 20px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    width: 700px;
+    max-width: 100%; /* Ensure container doesn't exceed screen width */
+    box-sizing: border-box; /* Include padding in width calculation */
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+    margin-top: 0;
+}
+
+/* Form Styles */
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.form-group {
+    margin-bottom: 15px;
+    width: 100%;
+    max-width: 400px;
+}
+
+.form-group label {
+    display: inline-block; /* Ensure labels are inline */
+    text-align: left; /* Align text to the left */
+    margin-bottom: 5px;
+    color: #555;
+    width: 100%; /* Ensure labels take full width */
+    max-width: 400px; /* Limit maximum width */
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+button[type="submit"] {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #094b5f; /* Updated color */
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button[type="submit"]:hover {
+    background-color: #287289; /* Updated hover color */
+}
+
+button[type="submit"]:focus {
+    outline: none;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container {
+        width: 90%;
+        padding: 10px;
+    }
+
+    .header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .header button {
+        margin: 5px 0;
+    }
+}
+
+@media (max-width: 480px) {
+    .form-group {
+        width: 90%;
+    }
+}
+    </style>
+    
+</head>
+<body>
+    <div class="header">
+        <button>Home</button>
+        <button>Logout</button>
+    </div>
+    <div class="container">
+        <h1>Applicant Form</h1><br>
+        <form id="applicantForm">
+            <div class="form-group">
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            <div class="form-group">
+                <label for="role">Role:</label>
+                <select id="role" name="role" required>
+                    <!-- Options will be dynamically added here -->
+                </select>
+            </div>
+            <button type="submit">Add Applicant</button>
+        </form>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+    const applicantForm = document.getElementById('applicantForm');
+    const roleSelect = document.getElementById('role');
+
+    try {
+        const response = await fetch('/getRoles');
+        if (!response.ok) {
+            throw new Error('Failed to fetch roles');
+        }
+        const roles = await response.json();
+
+        roles.forEach(role => {
+            const option = document.createElement('option');
+            option.value = role.role;
+            option.textContent = role.role;
+            roleSelect.appendChild(option);
+        });
+    } catch (error) {
+        console.error('Error fetching roles:', error);
+    }
+
+    applicantForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const formData = new FormData(applicantForm);
+        const applicantData = Object.fromEntries(formData);
+
+        try {
+            const response = await fetch('/addApplicant', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(applicantData),
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to add applicant');
+            }
+
+            alert('Applicant added successfully!');
+            applicantForm.reset();
+        } catch (error) {
+            console.error('Error adding applicant:', error);
+        }
+    });
+});
+
+    </script>
+</body>
+</html>

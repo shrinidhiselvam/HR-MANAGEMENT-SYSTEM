@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Preview Info</title>
+    <link rel="stylesheet">
+</head>
+<body>
+    <div class="preview-container">
+        <h2>User Information Preview</h2>
+        <div id="userInfo"></div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const userId = urlParams.get('id');
+
+            fetch(/user/${userId})
+            .then(response => response.json())
+            .then(data => {
+                if (data) {
+                    const userInfo = document.getElementById('userInfo');
+                    userInfo.innerHTML = `
+                        <p>First Name: ${data.fname}</p>
+                        <p>Last Name: ${data.lname}</p>
+                        <p>Email: ${data.email}</p>
+                        <p>Door No: ${data.door}</p>
+                        <p>Street Name: ${data.street}</p>
+                        <p>City/Town: ${data.city}</p>
+                        <p>District: ${data.district}</p>
+                        <p>State: ${data.state}</p>
+                        <p>Country: ${data.country}</p>
+                        <p>Mobile No: ${data.mobile}</p>
+                        <p>Date of Birth: ${data.dob}</p>
+                        <p>Age: ${data.age}</p>
+                        <p>Gender: ${data.gender}</p>
+                        <p>Years of Experience: ${data.exp}</p>
+                        <p>Preferred Branch: ${data.course}</p>
+                        <p>Blood Group: ${data.bloodgroup}</p>
+                        <p>Aadhar Number: ${data.aadhar}</p>
+                        <p>PAN Number: ${data.pan}</p>
+                        <p>Temporary ID: ${data.temporaryID}</p>
+                    `;
+                } else {
+                    console.error('Error fetching user data.');
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching user data:', error);
+            });
+        });
+    </script>
+</body>
+</html>

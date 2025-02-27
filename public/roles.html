@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roles Customization</title>
+    <style>
+        body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f2f5;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.container {
+    flex-grow: 1;
+    justify-content: center; /* Center content horizontally */
+    align-items: center; /* Center content vertically */
+    min-height: 75vh; /* Full height of viewport */
+}
+
+.main-content {
+    width: 100%; /* Width of main content */
+    max-width: 1195px; /* Maximum width to limit content size */
+    padding: 20px; /* Padding around content */
+    margin-left: 290px;
+    margin-top: 90px;
+    background-color: #ffffff; /* White background */
+    border-radius: 5px; /* Rounded corners */
+    box-shadow: 0 0 10px rgba(0,0,0,0.1); /* Shadow effect */
+}
+
+#roleInputs {
+    margin-bottom: 20px; /* Space below role inputs */
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Gap between label and input */
+}
+
+.buttons {
+    margin-top: 10px; /* Space above buttons */
+}
+
+.buttons button {
+    margin-right: 10px; /* Space between buttons */
+    padding: 10px 15px; /* Padding for buttons */
+    border: none; /* No border */
+    background-color: #094b5f; /* Dark Blue background */
+    color: #fff; /* White text color */
+    border-radius: 5px; /* Rounded corners */
+    cursor: pointer; /* Pointer cursor */
+    transition: background-color 0.3s; /* Smooth background color transition */
+}
+
+.buttons button:hover {
+    background-color: #28728f; /* Darker blue on hover */
+}
+
+#errorMessage {
+    color: red; /* Red error message color */
+    margin-top: 20px; /* Space above error message */
+    font-weight: bold; /* Bold error message */
+}
+    </style>
+</head>
+<body>
+    <div id="navbar-placeholder"></div>
+    <div id="sidebar-placeholder"></div>
+    <div class="header">
+        <button id="home-button">Home</button>
+        <button id="logout-button">Logout</button>
+    </div>
+    <div class="container">
+        <div class="main-content">
+            <div id="roleInputs">
+                <label for="role1">Role 1:</label>
+                <input type="text" id="role1" class="role-input" required>
+            </div>
+            <div class="buttons">
+                <button id="addRole">Add Role</button>
+                <button id="removeRole">Remove Role</button>
+                <button id="saveRoles">Save Roles</button>
+            </div>
+            <p id="errorMessage"></p>
+        </div>
+    </div>
+    <script>
+      document.addEventListener('DOMContentLoaded', async () => {
+    const roleInputs = document.getElementById('roleInputs');
+    const addRoleButton = document.getElementById('addRole');
+    const removeRoleButton = document.getElementById('removeRole');
+    const saveRolesButton = document.getElementById('saveRoles');
+    const errorMessage = document.getElementById('errorMessage');
+
+    let userAddedRoles = new Set(); // Using a Set to store unique roles
+
+    // Fetch roles initially from the server
+    try {
+        const response = await fetch('/getRoles');
+        if (!response.ok) {
+            throw new Error('Error fetching roles.');
+        }
+        const roles = await response.json();
+
+        roles.forEach(role => {
+            userAddedRoles.add(role.role); // Add existing roles to Set
+            addRole(role.role, true); // Add existing roles to UI and hide them
+        });
+
+    } catch (error) {
+        console.error('Error fetching roles:', error);
+        errorMessage.textContent = 'Error fetching roles.';
+    }
+
+    function addRole(roleName, hidden = false) {
+        const roleNumber = roleInputs.children.length / 2 + 1; // Calculate next sequential role number
+
+        // Check if roleName is already in userAddedRoles set
+        if (roleName && userAddedRoles.has(roleName.trim())) {
+            return; // If duplicate, do not add
+        }
+
+        const label = document.createElement('label');
+        label.textContent = `Role ${roleNumber}`;
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.value = roleName.trim(); // Set input value to trimmed role name
+        input.classList.add('role-input');
+        input.required = true;
+
+        if (hidden) {
+            label.classList.add('hidden');
+            input.classList.add('hidden');
+        }
+
+        roleInputs.appendChild(label);
+        roleInputs.appendChild(input);
+
+        if (roleName) {
+            userAddedRoles.add(roleName.trim()); // Add role to Set if it's not a duplicate
+        }
+    }
+
+    addRoleButton.addEventListener('click', () => {
+        addRole('', false); // Add empty input for new role
+    });
+
+    removeRoleButton.addEventListener('click', () => {
+        const inputs = roleInputs.querySelectorAll('.role-input');
+
+        // Check if there are inputs to remove
+        if (inputs.length > 0) {
+            const lastInput = inputs[inputs.length - 1];
+            const label = lastInput.previousElementSibling;
+
+            // Remove label and input
+            if (label) {
+                roleInputs.removeChild(label);
+            }
+            if (lastInput) {
+                roleInputs.removeChild(lastInput);
+                const removedRole = lastInput.value.trim();
+                if (removedRole) {
+                    userAddedRoles.delete(removedRole); // Remove role from Set
+                }
+            }
+        }
+    });
+
+    saveRolesButton.addEventListener('click', async () => {
+        const roleInputs = document.querySelectorAll('.role-input');
+        const roles = [];
+
+        roleInputs.forEach(input => {
+            const role = input.value.trim();
+            if (role) {
+                roles.push({ role });
+            }
+        });
+
+        if (roles.length === 0) {
+            errorMessage.textContent = 'Please add at least one role.';
+            return;
+        }
+
+        try {
+            const response = await fetch('/saveRoles', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ roles })
+            });
+
+            if (response.ok) {
+                alert("Roles saved successflly");
+            } else {
+                throw new Error('Error saving roles.');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            errorMessage.textContent = 'Error saving roles.';
+        }
+    });
+});
+  
+    </script>
+    <script>
+        function loadHTML(id, url) {
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', url, true);
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    document.getElementById(id).innerHTML = xhr.responseText;
+                    // Initialize dropdowns after sidebar is loaded
+                    if (id === 'sidebar-placeholder') {
+                        initializeDropdowns();
+                    }
+                }
+            };
+            xhr.send();
+        }
+
+        function initializeDropdowns() {
+            console.log('Initializing dropdowns...');
+            var dropdowns = document.querySelectorAll('.dropdown-btn');
+            dropdowns.forEach(function(dropdown) {
+                dropdown.addEventListener('click', function() {
+                    this.classList.toggle('active');
+                    var dropdownContent = this.nextElementSibling;
+                    if (dropdownContent.style.display === 'block') {
+                        dropdownContent.style.display = 'none';
+                    } else {
+                        dropdownContent.style.display = 'block';
+                    }
+                });
+            });
+            console.log('Dropdowns initialized');
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            loadHTML('navbar-placeholder', 'navbar.html');
+            loadHTML('sidebar-placeholder', 'sidebar.html');
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Round Customization</title>
+    <style>
+      /* General styling */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #e1f6fb;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    color: #333;
+}
+
+/* Container Styles */
+.container {
+    display: flex;
+    height: 100%;
+    margin-top: 20px;
+    width: 100%;
+    padding-top: 80px; /* Adjust padding to account for fixed header */
+}
+
+/* Sidebar Styles */
+.roles {
+    width: 15%;
+    color: #000; /* Set font color of roles to black */
+    padding: 20px;
+    margin-left: 285px;
+    background-color: #fff; /* Add a background color for the sidebar */
+    box-shadow: 2px 0 5px rgba(0,0,0,0.1); /* Add a slight shadow for better separation */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-y: auto; /* Add vertical scrollbar */
+}
+
+.roles h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.roles #roleButtons {
+    list-style-type: none;
+    padding: 0;
+    width: 100%;
+    display: flex;
+    flex-direction: column; /* Ensure the list items are in a column layout */
+    align-items: center; /* Center the list items horizontally */
+}
+
+.roles #roleButtons li {
+    font-size: 18px;
+    padding: 10px 0; /* Increase padding for better readability */
+    cursor: pointer;
+    text-align: center;
+    width: 90%; /* Adjust width for better spacing */
+    margin-bottom: 15px; /* Increase spacing between items */
+    transition: color 0.3s; /* Smooth transition for hover effect */
+    color: #000; /* Ensure text color is black */
+}
+
+.roles #roleButtons li:hover {
+    color: #555; /* Change text color on hover for better visibility */
+}
+
+.roles #roleButtons button {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    background-color: #fff;
+    color: #000;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.roles #roleButtons button:hover {
+    background-color: #287289;
+    color: #fff;
+}
+
+/* Main content styling */
+.main {
+    flex: 1;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    background-color: white;
+    overflow-y: auto; /* Allow vertical scrolling in the main area */
+}
+
+
+/* Buttons styling */
+.buttons {
+    margin-top: 20px;
+    display: none; /* Initially hide the buttons */
+    justify-content: center; /* Center buttons horizontally */
+}
+
+.buttons button {
+    background-color: #094b5f; /* Match button color */
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    min-width: 120px; /* Set the same minimum width for all buttons */
+    height: 40px; /* Set the same height for all buttons */
+    margin: 0 5px; /* Adjust margin for spacing */
+    border-radius: 4px; /* Add border radius */
+    transition: background-color 0.3s;
+}
+
+.buttons button:hover {
+    background-color: #287289; /* Updated hover color */
+    opacity: 0.8;
+}
+
+.error {
+    color: red;
+}
+
+/* Input fields styling */
+#roundInputs {
+    margin-top: 20px;
+    width: 100%; /* Full width for input fields */
+}
+
+#roundInputs label {
+    font-size: 16px;
+}
+
+#roundInputs input {
+    width: calc(100% - 16px); /* Reduced width for input fields */
+    margin-bottom: 10px;
+    padding: 8px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+#roundInputs .error {
+    border-color: red;
+}
+
+#roleTitle {
+    font-size: 24px;
+}
+
+/* Table styling */
+#aptitudeTableContainer {
+    margin-top: 20px;
+    width: 100%;
+}
+
+.aptitude-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.aptitude-table th, .aptitude-table td {
+    border: 1px solid #ccc;
+    padding: 8px;
+    text-align: left;
+}
+
+.aptitude-table th {
+    background-color: #094b5f; /* Match button color */
+    color: white;
+    text-transform: uppercase;
+}
+
+.aptitude-table td {
+    background-color: #f9f9f9;
+}
+
+.aptitude-table tr:nth-child(even) td {
+    background-color: #ecf0f1;
+}
+
+/* Row action styling */
+.add-row, .remove-row {
+    margin-top: 10px;
+    margin-bottom: 20px; /* Add space below the buttons */
+    cursor: pointer;
+    color: #fff; /* Match button text color */
+    background-color: #094b5f; /* Match button color */
+    padding: 5px 10px; /* Smaller padding for smaller size */
+    border: none;
+    border-radius: 4px;
+    transition: background-color 0.3s, color 0.3s;
+    text-align: center;
+}
+
+.add-row:hover, .remove-row:hover {
+    background-color: #287289;
+}
+/* General styling */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    color: #333;
+}
+
+/* Header Styles */
+.header {
+    width: 100%;
+    padding: 20px 20px; /* Increased padding for height */
+    background-color: #094b5f; /* Blue color */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    z-index: 1000;
+}
+
+.header button {
+    margin-left: 10px;
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #fff; /* White background */
+    color: #000; /* Black text */
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.header button:hover {
+    background-color: #287289; /* Updated hover color */
+    color: #fff; /* Text color on hover */
+}
+
+/* Container Styles */
+.container {
+    display: flex;
+    height: 100%;
+    width: 100%;
+    padding-top: 80px; /* Adjust padding to account for fixed header */
+}
+
+/* Sidebar Styles */
+.sidebar {
+    width: 250px;
+    color: #000; /* Set font color of roles to black */
+    padding: 20px;
+    background-color: #fff; /* Add a background color for the sidebar */
+    box-shadow: 2px 0 5px rgba(0,0,0,0.1); /* Add a slight shadow for better separation */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-y: auto; /* Add vertical scrollbar */
+}
+
+.sidebar h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.sidebar #roleButtons {
+    list-style-type: none;
+    padding: 0;
+    width: 100%;
+    display: flex;
+    flex-direction: column; /* Ensure the list items are in a column layout */
+    align-items: center; /* Center the list items horizontally */
+}
+
+.sidebar #roleButtons li {
+    font-size: 18px;
+    padding: 10px 0; /* Increase padding for better readability */
+    cursor: pointer;
+    text-align: center;
+    width: 90%; /* Adjust width for better spacing */
+    margin-bottom: 15px; /* Increase spacing between items */
+    transition: color 0.3s; /* Smooth transition for hover effect */
+    color: #000; /* Ensure text color is black */
+}
+
+.sidebar #roleButtons li:hover {
+    color: #555; /* Change text color on hover for better visibility */
+}
+
+.sidebar #roleButtons button {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    background-color: #fff;
+    color: #000;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.sidebar #roleButtons button:hover {
+    background-color: #287289;
+    color: #fff;
+}
+
+/* Main content styling */
+.main {
+    flex: 1;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    background-color: white;
+    overflow-y: auto; /* Allow vertical scrolling in the main area */
+}
+
+/* Buttons styling */
+.buttons {
+    margin-top: 20px;
+    display: none; /* Initially hide the buttons */
+    justify-content: center; /* Center buttons horizontally */
+}
+
+.buttons button {
+    background-color: #094b5f; /* Match button color */
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    min-width: 120px; /* Set the same minimum width for all buttons */
+    height: 40px; /* Set the same height for all buttons */
+    margin: 0 5px; /* Adjust margin for spacing */
+    border-radius: 4px; /* Add border radius */
+    transition: background-color 0.3s;
+}
+
+.buttons button:hover {
+    background-color: #287289; /* Updated hover color */
+    opacity: 0.8;
+}
+
+.error {
+    color: red;
+}
+
+/* Input fields styling */
+#roundInputs {
+    margin-top: 20px;
+    width: 100%; /* Full width for input fields */
+}
+
+#roundInputs label {
+    font-size: 16px;
+}
+
+#roundInputs input {
+    width: calc(100% - 16px); /* Reduced width for input fields */
+    margin-bottom: 10px;
+    padding: 8px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+#roundInputs .error {
+    border-color: red;
+}
+
+#roleTitle {
+    font-size: 24px;
+}
+
+/* Table styling */
+#aptitudeTableContainer {
+    margin-top: 20px;
+    width: 100%;
+}
+
+.aptitude-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.aptitude-table th, .aptitude-table td {
+    border: 1px solid #ccc;
+    padding: 8px;
+    text-align: left;
+}
+
+.aptitude-table th {
+    background-color: #094b5f; /* Match button color */
+    color: white;
+    text-transform: uppercase;
+}
+
+.aptitude-table td {
+    background-color: #f9f9f9;
+}
+
+.aptitude-table tr:nth-child(even) td {
+    background-color: #ecf0f1;
+}
+
+/* Row action styling */
+.add-row, .remove-row {
+    margin-top: 10px;
+    margin-bottom: 20px; /* Add space below the buttons */
+    cursor: pointer;
+    color: #fff; /* Match button text color */
+    background-color: #094b5f; /* Match button color */
+    padding: 5px 10px; /* Smaller padding for smaller size */
+    border: none;
+    border-radius: 4px;
+    transition: background-color 0.3s, color 0.3s;
+    text-align: center;
+}
+
+.add-row:hover, .remove-row:hover {
+    background-color: #287289;
+}
+/* Add styles to the Add Section and Remove Section buttons */
+.round-container button {
+    padding: 6px 9px; /* Reduced padding */
+    margin: 5px;
+    margin-bottom: 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 11px; /* Reduced font size */
+}
+
+.round-container .add-section-button {
+    background-color: #094b5f; /* Button color */
+    color: white;
+}
+
+.round-container .remove-section-button {
+    background-color: #094b5f; /* Button color */
+    color: white;
+}
+
+/* Add hover effects */
+.round-container .add-section-button:hover,
+.round-container .remove-section-button:hover {
+    background-color: #287289; /* Hover color */
+    opacity: 0.8;
+}
+    </style>
+</head>
+<body>
+    <div id="navbar-placeholder"></div>
+    <div id="sidebar-placeholder"></div>
+    <div class="container">
+        <div class="roles">
+            <h2>Roles</h2>
+            <ul id="roleButtons">
+                <!-- Role buttons will be dynamically added here -->
+            </ul>
+        </div>
+        <div class="main">
+            <h2 id="roleTitle">Select a role to customize rounds</h2>
+            <div id="roundInputs">
+                <!-- Round input fields will be dynamically added here -->
+            </div>
+            <div class="buttons">
+                <button id="addRound">Add Round</button>
+                <button id="removeRound">Remove Round</button>
+                <button id="save">Save</button>
+            </div>
+            <div id="errorMessage" class="error"></div>
+        </div>
+    </div>
+    <script>
+       document.addEventListener('DOMContentLoaded', async () => {
+    const roleButtons = document.getElementById('roleButtons');
+    const roleTitle = document.getElementById('roleTitle');
+    const roundInputs = document.getElementById('roundInputs');
+    const addRoundButton = document.getElementById('addRound');
+    const removeRoundButton = document.getElementById('removeRound');
+    const saveButton = document.getElementById('save');
+    const errorMessage = document.getElementById('errorMessage');
+    const buttonsContainer = document.querySelector('.buttons');
+
+    let selectedRole = '';
+    let roundCount = 3; // Initial number of rounds
+
+    // Fetch roles from the server
+    try {
+        const response = await fetch('/getRoles');
+        if (!response.ok) {
+            throw new Error('Error fetching roles.');
+        }
+        const roles = await response.json();
+
+        roles.forEach(role => {
+            const button = document.createElement('button');
+            button.textContent = role.role;
+            button.classList.add('role-button');
+            button.addEventListener('click', () => {
+                selectedRole = role.role;
+                displayRoundInputs(role.role);
+                buttonsContainer.style.display = 'flex'; // Show buttons when rounds are displayed
+
+                // Store selected role in localStorage
+                localStorage.setItem('currentRole', role.role);
+            });
+            roleButtons.appendChild(button);
+        });
+    } catch (error) {
+        console.error('Error fetching roles:', error);
+        errorMessage.textContent = 'Error fetching roles.';
+    }
+    
+    function displayRoundInputs(role) {
+        roleTitle.textContent = `Customize Rounds for ${role}`;
+        roundInputs.innerHTML = ''; // Clear previous inputs
+
+        for (let i = 1; i <= roundCount; i++) {
+            createRoundInput(i);
+        }
+    }
+
+    function createRoundInput(roundNumber) {
+        const roundContainer = document.createElement('div');
+        roundContainer.classList.add('round-container');
+
+        const label = document.createElement('label');
+        label.textContent = `Round ${roundNumber}${roundNumber <= 3 ? ' *' : ''}`;
+
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.name = `round${roundNumber}`;
+        input.required = (roundNumber <= 3); // Make first three rounds mandatory
+
+        const sectionContainer = document.createElement('div');
+        sectionContainer.classList.add('section-container');
+
+        const addSectionButton = document.createElement('button');
+        addSectionButton.textContent = 'Add Section';
+        addSectionButton.type = 'button';
+        addSectionButton.className= 'add-row'
+        addSectionButton.addEventListener('click', () => addSection(sectionContainer));
+
+        const removeSectionButton = document.createElement('button');
+        removeSectionButton.textContent = 'Remove Section';
+        removeSectionButton.type = 'button';
+        removeSectionButton.className='remove-row';
+        removeSectionButton.addEventListener('click', () => removeSection(sectionContainer));
+
+        roundContainer.appendChild(label);
+        roundContainer.appendChild(input);
+        roundContainer.appendChild(sectionContainer);
+        roundContainer.appendChild(addSectionButton);
+        roundContainer.appendChild(removeSectionButton);
+
+        roundInputs.appendChild(roundContainer);
+    }
+
+    function addSection(sectionContainer) {
+        const sectionRow = document.createElement('div');
+        sectionRow.classList.add('section-row');
+
+        sectionRow.innerHTML = `
+            <label>Section:</label><input type="text" name="section">
+            <label>Number of Questions:</label><input type="number" name="numQuestions">
+            <label>Marks per Question:</label><input type="number" name="marksPerQuestion">
+            <label>Total Marks:</label><input type="number" name="totalMarks">
+            <label>Pass Marks:</label><input type="number" name="passMarks">
+        `;
+
+        sectionContainer.appendChild(sectionRow);
+    }
+
+    function removeSection(sectionContainer) {
+        if (sectionContainer.children.length > 0) {
+            sectionContainer.removeChild(sectionContainer.lastElementChild);
+        }
+    }
+
+    addRoundButton.addEventListener('click', () => {
+        roundCount++;
+        createRoundInput(roundCount);
+    });
+
+    removeRoundButton.addEventListener('click', () => {
+        if (roundCount > 3) {
+            roundInputs.removeChild(roundInputs.lastElementChild); // Remove round container
+            roundCount--;
+        }
+    });
+
+    saveButton.addEventListener('click', async () => {
+        const roundContainers = roundInputs.querySelectorAll('.round-container');
+        let allFieldsFilled = true;
+        let roundsData = [];
+
+        roundContainers.forEach((roundContainer, index) => {
+            const roundInput = roundContainer.querySelector(`input[name="round${index + 1}"]`);
+            if (roundInput.required && roundInput.value.trim() === '') {
+                allFieldsFilled = false;
+                roundInput.classList.add('error');
+                errorMessage.textContent = 'Please fill in all required fields.';
+            } else {
+                roundInput.classList.remove('error');
+                const roundData = {
+                    round: index + 1,
+                    description: roundInput.value,
+                    sections: []
+                };
+
+                const sectionRows = roundContainer.querySelectorAll('.section-row');
+                sectionRows.forEach(sectionRow => {
+                    const sectionInputs = sectionRow.querySelectorAll('input');
+                    const sectionData = {};
+                    sectionInputs.forEach(input => {
+                        sectionData[input.name] = input.value;
+                    });
+                    roundData.sections.push(sectionData);
+                });
+
+                roundsData.push(roundData);
+            }
+        });
+
+        if (allFieldsFilled) {
+            errorMessage.textContent = '';
+
+            // Retrieve selected role from localStorage
+            const role = localStorage.getItem('currentRole');
+
+            // Send data to the server
+            try {
+                const response = await fetch('/saveRounds', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ role, rounds: roundsData })
+                });
+
+                if (response.ok) {
+                    // Redirect to grading.html after saving rounds
+                    window.location.href = 'grading.html?role=' + encodeURIComponent(role);
+                } else {
+                    throw new Error('Error saving rounds.');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                errorMessage.textContent = 'Error saving rounds.';
+            }
+        }
+    });
+});
+ 
+    </script>
+    <script>
+        function loadHTML(id, url) {
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', url, true);
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    document.getElementById(id).innerHTML = xhr.responseText;
+                    // Initialize dropdowns after sidebar is loaded
+                    if (id === 'sidebar-placeholder') {
+                        initializeDropdowns();
+                    }
+                }
+            };
+            xhr.send();
+        }
+
+        function initializeDropdowns() {
+            console.log('Initializing dropdowns...');
+            var dropdowns = document.querySelectorAll('.dropdown-btn');
+            dropdowns.forEach(function(dropdown) {
+                dropdown.addEventListener('click', function() {
+                    this.classList.toggle('active');
+                    var dropdownContent = this.nextElementSibling;
+                    if (dropdownContent.style.display === 'block') {
+                        dropdownContent.style.display = 'none';
+                    } else {
+                        dropdownContent.style.display = 'block';
+                    }
+                });
+            });
+            console.log('Dropdowns initialized');
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            loadHTML('navbar-placeholder', 'navbar.html');
+            loadHTML('sidebar-placeholder', 'sidebar.html');
+        });
+    </script>
+</body>
+</html>

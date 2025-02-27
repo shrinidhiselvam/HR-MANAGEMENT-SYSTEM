@@ -1,0 +1,1233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration Form</title>
+    <link rel="stylesheet">
+    <style>
+       body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f2f5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 210vh;
+    margin: 0;
+}
+
+.registration-container {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    text-align: center;
+    width: 700px;
+}
+
+h2 {
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.input-group {
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 5px;
+    color: #555;
+}
+
+.input-group input,
+.input-group select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    max-width: 647px;
+}
+
+.button-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.input-group .required {
+    color: red;
+}
+
+button {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    background-color: #094b5f;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #287289;
+}
+
+.empty-field {
+    border: 2px solid red;
+}
+
+.input-group.error {
+    border-color: red;
+}
+
+.input-group.error input[type="file"] {
+    border-color: red;
+}
+
+.hidden {
+    display: none;
+}
+
+.mb-3 {
+    margin-bottom: 1rem;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.form-select {
+    display: block;
+    width: 100%;
+    padding: 0.5rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #495057;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+#personal-info {
+    text-align: left;
+    margin-top: 20px;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    background-color: #f8f9fa;
+}
+
+/* Navbar styles */
+.navbar {
+        background: linear-gradient(90deg, #094b5f, #0056b3);
+        color: white;
+        padding: 15px 30px;
+        position: fixed;
+        width: 100%;
+        top: 0;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        z-index: 1000;
+        display: flex;
+        justify-content: space-between; /* Align items to left and right */
+        align-items: center;
+    }
+
+    #nav-title {
+        font-size: 24px; /* Larger font size */
+    }
+
+    .navbar ul {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .navbar ul li {
+        margin-right: 20px;
+    }
+
+    .navbar ul li a {
+        text-decoration: none;
+        color: white;
+        font-weight: bold;
+        font-size: 1.2em;
+    }
+
+    .logout {
+        padding: 10px 20px;
+        background-color: #ffffff; /* White background */
+        color: black; /* Black text color */
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s, transform 0.3s; /* Align right */
+        margin-left: 1080px;
+    }
+
+    .logout:hover {
+        background-color: #094b5f;
+        color: white;
+        transform: scale(1.1);
+    }
+
+
+/* Sidebar styles */
+
+
+
+
+/* Content area */
+.content {
+    margin-left: 240px; /* Adjust to the width of the sidebar */
+    margin-top: 110px; /* Adjust this value as needed to move content downwards */
+    padding: 20px;
+    background-color: #f8f9fa;
+    overflow-y: auto;
+    transition: margin-left 0.3s ease-in-out;
+}
+
+
+.container {
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.header h1 {
+    margin: 0;
+    padding: 20px 0;
+}
+
+.buttons {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.progress {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.progress-bar {
+    width: 100%;
+    background-color: #ccc;
+    border-radius: 5px;
+    overflow: hidden;
+    margin: 10px 0;
+}
+
+.progress-bar-fill {
+    height: 20px;
+    background-color: #094b5f;
+}
+
+.progress-text {
+    display: block;
+    margin-top: 5px;
+    font-size: 0.8em;
+}
+
+/* Modal styles */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    position: relative;
+}
+
+.close {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    font-size: 30px;
+    font-weight: bold;
+    color: #888;
+    cursor: pointer;
+}
+
+.close:hover,
+.close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Additional survey table and form styling */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+th, td {
+    padding: 10px;
+    text-align: center;
+    width: 14.28%; /* 1/7th of the table width for 7 columns */
+}
+
+th {
+    background-color: #f2f2f2;
+}
+
+td {
+    vertical-align: middle;
+}
+
+td input[type="radio"] {
+    margin: 0 auto; /* Center the radio buttons */
+    display: block;
+}
+
+button {
+    display: inline-block;
+    width: auto;
+    padding: 10px;
+    background-color: #094b5f;
+    border: none;
+    border-radius: 5px;
+    font-size: 1em;
+    cursor: pointer;
+    color: #fff;
+    margin: 10px;
+}
+
+button:hover {
+    background-color: #287289;
+}
+
+/* styles.css */
+.sidebar {
+    width: 240px;
+    background-color: #ffffff;
+    padding: 20px;
+    box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+    position: fixed;
+    top: 120px;
+    bottom: 0;
+    overflow-y: auto;
+    transition: transform 0.3s ease-in-out;
+    z-index: 900;
+    margin-right: 1000px;
+}
+
+.sidebar ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.sidebar ul li {
+    margin-bottom: 15px;
+}
+
+.sidebar ul li a, .dropdown-btn {
+    text-decoration: none;
+    color: #333;
+    font-weight: bold;
+    display: block;
+    padding: 8px 12px;
+    border-radius: 4px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.sidebar ul li a:hover, .dropdown-btn:hover {
+    background-color: #e0e0e0;
+    color: #094b5f;
+}
+
+.dropdown-container {
+    display: none;
+    margin-top: 10px;
+    padding-left: 20px;
+    margin-left: 20px;
+    font-size: 14px;
+    color:#817b7b;
+}
+
+.dropdown-btn::after {
+    content: ' \25BC';
+    float: right;
+}
+
+.dropdown-btn.active::after {
+    content: ' \25B2';
+}
+
+
+    </style>
+</head>
+<body>
+    <header class="navbar">
+        <nav>
+            <ul>
+                <li><a id="nav-title" href="#">Recruitment Management</a></li>
+            </ul>
+            <button class="logout">Logout</button>
+        </nav>
+    </header>
+    <aside class="sidebar">
+        <ul>
+            <li><a href="#link1">Personal Information</a></li>
+            <li><a href="display.html">Roles</a></li>
+            <li><a href="roundcustomization.html">Rounds</a></li>
+            <li><a href="failed.html">Failed applicants</a></li>
+            <li class="dropdown">
+                <span class="dropdown-btn">Job Details</span>
+                <ul class="dropdown-container">
+                    <li><a href="jobdetails.html">Add Job Details</a></li>
+                    <li><a href="viewjobdetails.html">View Job Details</a></li>
+                </ul>
+            </li>
+            <li class="dropdown">
+                <span class="dropdown-btn">Skill Inventory</span>
+                <ul class="dropdown-container">
+                    <li><a href="applicant.html">Add Applicant Skills</a></li>
+                    <li><a href="viewapplicant.html">View Applicant Skills</a></li>
+                </ul>
+            </li>
+            <li><a href="salary.html">Salary Benefits</a></li>
+            <li><a href="#link6">Employee Benefits Information</a></li>
+            <li><a href="#link7">Employee Performance Data</a></li>
+            <li class="dropdown">
+                <span class="dropdown-btn">Employee Survey Data</span>
+                <ul class="dropdown-container">
+                    <li><a href="survey1.html">Onboarding Survey</a></li>
+                    <li><a href="survey2.html">Engagement Survey</a></li>
+                    <li><a href="survey3.html">Exit Survey</a></li>
+                </ul>
+            </li>
+        </ul>
+    </aside>
+    <div class ="content">
+    <div class="registration-container">
+        <div class="header">
+        <h2>Registration Form</h2>
+        <form id="registrationForm" enctype="multipart/form-data">
+            <!-- Personal Info Section -->
+            <div id="personal-info-section">
+                <div class="input-group">
+                    <label for="fname">First Name <span class="required">*</span></label>
+                    <input type="text" id="fname" name="fname" required>
+                </div>
+                <div class="input-group">
+                    <label for="lname">Last Name <span class="required">*</span></label>
+                    <input type="text" id="lname" name="lname" required>
+                </div>
+                <div class="input-group">
+                    <label for="email">Email ID <span class="required">*</span></label>
+                    <input type="email" id="email" name="email" required onblur="validateEmail()">
+                    <span id="emailmessage" style="color: red;"></span>
+                </div>
+                <div class="input-group">
+                    <label for="door">Door No <span class="required">*</span></label>
+                    <input type="text" id="door" name="door" required>
+                </div>
+                <div class="input-group">
+                    <label for="street">Street Name <span class="required">*</span></label>
+                    <input type="text" id="street" name="street" required>
+                </div>
+                <div class="input-group">
+                    <label for="city">City/Town <span class="required">*</span></label>
+                    <input type="text" id="city" name="city" required>
+                </div>
+                <div class="input-group">
+                    <label for="district">District <span class="required">*</span></label>
+                    <input type="text" id="district" name="district" required>
+                </div>
+                <div class="input-group">
+                    <label for="state">State <span class="required">*</span></label>
+                    <input type="text" id="state" name="state" required>
+                </div>
+                <div class="input-group">
+                    <label for="country">Country <span class="required">*</span></label>
+                    <select id="country" name="country" onchange="updatePhoneCode()">
+                        <option value="">Select Country</option>
+                    <option value="Abkhazia">Abkhazia (+7 840, +7 940)</option>
+                    <option value="Afghanistan">Afghanistan (+93)</option>
+                    <option value="Åland Islands">Åland Islands (+358 18)</option>
+                    <option value="Albania">Albania (+355)</option>
+                    <option value="Algeria">Algeria (+213)</option>
+                    <option value="American Samoa">American Samoa (+1 684)</option>
+                    <option value="Andorra">Andorra (+376)</option>
+                    <option value="Angola">Angola (+244)</option>
+                    <option value="Anguilla">Anguilla (+1 264)</option>
+                    <option value="Antigua and Barbuda">Antigua and Barbuda (+1 268)</option>
+                    <option value="Argentina">Argentina (+54)</option>
+                    <option value="Armenia">Armenia (+374)</option>
+                    <option value="Aruba">Aruba (+297)</option>
+                    <option value="Ascension">Ascension (+247)</option>
+                    <option value="Australia">Australia (+61)</option>
+                    <option value="Austria">Austria (+43)</option>
+                    <option value="Azerbaijan">Azerbaijan (+994)</option>
+                    <option value="Bahamas">Bahamas (+1 242)</option>
+                    <option value="Bahrain">Bahrain (+973)</option>
+                    <option value="Bangladesh">Bangladesh (+880)</option>
+                    <option value="Barbados">Barbados (+1 246)</option>
+                    <option value="Belarus">Belarus (+375)</option>
+                    <option value="Belgium">Belgium (+32)</option>
+                    <option value="Belize">Belize (+501)</option>
+                    <option value="Benin">Benin (+229)</option>
+                    <option value="Bermuda">Bermuda (+1 441)</option>
+                    <option value="Bhutan">Bhutan (+975)</option>
+                    <option value="Bolivia">Bolivia (+591)</option>
+                    <option value="Bosnia and Herzegovina">Bosnia and Herzegovina (+387)</option>
+                    <option value="Botswana">Botswana (+267)</option>
+                    <option value="Brazil">Brazil (+55)</option>
+                    <option value="British Indian Ocean Territory">British Indian Ocean Territory (+246)</option>
+                    <option value="British Virgin Islands">British Virgin Islands (+1 284)</option>
+                    <option value="Brunei Darussalam">Brunei Darussalam (+673)</option>
+                    <option value="Bulgaria">Bulgaria (+359)</option>
+                    <option value="Burkina Faso">Burkina Faso (+226)</option>
+                    <option value="Burundi">Burundi (+257)</option>
+                    <option value="Cambodia">Cambodia (+855)</option>
+                    <option value="Cameroon">Cameroon (+237)</option>
+                    <option value="Canada">Canada (+1)</option>
+                    <option value="Cape Verde">Cape Verde (+238)</option>
+                    <option value="Caribbean Netherlands">Caribbean Netherlands (+599 3, +599 4, +599 7)</option>
+                    <option value="Cayman Islands">Cayman Islands (+1 345)</option>
+                    <option value="Central African Republic">Central African Republic (+236)</option>
+                    <option value="Chad">Chad (+235)</option>
+                    <option value="Chatham Island, New Zealand">Chatham Island, New Zealand (+64)</option>
+                    <option value="Chile">Chile (+56)</option>
+                    <option value="China">China (+86)</option>
+                    <option value="Christmas Island">Christmas Island (+61 89164)</option>
+                    <option value="Cocos (Keeling) Islands">Cocos (Keeling) Islands (+61 89162)</option>
+                    <option value="Colombia">Colombia (+57)</option>
+                    <option value="Comoros">Comoros (+269)</option>
+                    <option value="Congo">Congo (+242)</option>
+                    <option value="Congo, the Democratic Republic of the (Zaire)">Congo, the Democratic Republic of the (Zaire) (+243)</option>
+                    <option value="Cook Islands">Cook Islands (+682)</option>
+                    <option value="Costa Rica">Costa Rica (+506)</option>
+                    <option value="Ivory Coast">Ivory Coast (+225)</option>
+                    <option value="Croatia">Croatia (+385)</option>
+                    <option value="Cuba">Cuba (+53)</option>
+                    <option value="Guantanamo Bay, Cuba">Guantanamo Bay, Cuba (+53 99)</option>
+                    <option value="Curaçao">Curaçao (+599 9)</option>
+                    <option value="Cyprus">Cyprus (+357)</option>
+                    <option value="Czech Republic">Czech Republic (+420)</option>
+                    <option value="Denmark">Denmark (+45)</option>
+                    <option value="Diego Garcia">Diego Garcia (+246)</option>
+                    <option value="Djibouti">Djibouti (+253)</option>
+                    <option value="Dominica">Dominica (+1 767)</option>
+                    <option value="Dominican Republic">Dominican Republic (+1 809, +1 829, +1 849)</option>
+                    <option value="East Timor">East Timor (+670)</option>
+                    <option value="Easter Island">Easter Island (+56)</option>
+                    <option value="Ecuador">Ecuador (+593)</option>
+                    <option value="Egypt">Egypt (+20)</option>
+                    <option value="El Salvador">El Salvador (+503)</option>
+                    <option value="Ellipso (Mobile Satellite service)">Ellipso (Mobile Satellite service) (+881 2, +881 3)</option>
+                    <option value="EMSAT (Mobile Satellite service)">EMSAT (Mobile Satellite service) (+882 13)</option>
+                    <option value="Equatorial Guinea">Equatorial Guinea (+240)</option>
+                    <option value="Eritrea">Eritrea (+291)</option>
+                    <option value="Estonia">Estonia (+372)</option>
+                    <option value="Ethiopia">Ethiopia (+251)</option>
+                    <option value="Falkland Islands">Falkland Islands (+500)</option>
+                    <option value="Faroe Islands">Faroe Islands (+298)</option>
+                    <option value="Fiji">Fiji (+679)</option>
+                    <option value="Finland">Finland (+358)</option>
+                    <option value="France">France (+33)</option>
+                    <option value="French Antilles">French Antilles</option>
+                    <option value="French Guiana">French Guiana (+594)</option>
+                    <option value="French Polynesia">French Polynesia (+689)</option>
+                    <option value="Gabon">Gabon (+241)</option>
+                    <option value="Gambia">Gambia (+220)</option>
+                    <option value="Georgia">Georgia (+995)</option>
+                    <option value="Germany">Germany (+49)</option>
+                    <option value="Ghana">Ghana (+233)</option>
+                    <option value="Gibraltar">Gibraltar (+350)</option>
+                    <option value="Global Mobile Satellite System (GMSS)">Global Mobile Satellite System (GMSS) (+881)</option>
+                    <option value="Globalstar (Mobile Satellite Service)">Globalstar (Mobile Satellite Service) (+881 8, +881 9)</option>
+                    <option value="Greece">Greece (+30)</option>
+                    <option value="Greenland">Greenland (+299)</option>
+                    <option value="Grenada">Grenada (+1 473)</option>
+                    <option value="Guadeloupe">Guadeloupe (+590)</option>
+                    <option value="Guam">Guam (+1 671)</option>
+                    <option value="Guatemala">Guatemala (+502)</option>
+                    <option value="Guernsey">Guernsey (+44 1481, +44 7781, +44 7839, +44 7911)</option>
+                    <option value="Guinea">Guinea (+224)</option>
+                    <option value="Guinea-Bissau">Guinea-Bissau (+245)</option>
+                    <option value="Guyana">Guyana (+592)</option>
+                    <option value="Haiti">Haiti (+509)</option>
+                    <option value="Honduras">Honduras (+504)</option>
+<option value="Hong Kong">Hong Kong (+852)</option>
+<option value="Hungary">Hungary (+36)</option>
+<option value="Iceland">Iceland (+354)</option>
+<option value="ICO Global (Mobile Satellite Service)">ICO Global (Mobile Satellite Service) (+881 0, +881 1)</option>
+<option value="India">India (+91)</option>
+<option value="Indonesia">Indonesia (+62)</option>
+<option value="Inmarsat SNAC">Inmarsat SNAC (+870)</option>
+<option value="International Freephone Service (UIFN)">International Freephone Service (UIFN) (+800)</option>
+<option value="International Networks">International Networks (+882, +883)</option>
+<option value="International Premium Rate Service’">International Premium Rate Service’ (+979)</option>
+<option value="International Shared Cost Service (ISCS)">International Shared Cost Service (ISCS) (+808)</option>
+<option value="Iran">Iran (+98)</option>
+<option value="Iraq">Iraq (+964)</option>
+<option value="Ireland">Ireland (+353)</option>
+<option value="Iridium (Mobile Satellite service)">Iridium (Mobile Satellite service) (+881 6, +881 7)</option>
+<option value="Isle of Man">Isle of Man (+44 1624, +44 7524, +44 7624, +44 7924)</option>
+<option value="Israel">Israel (+972)</option>
+<option value="Italy">Italy (+39)</option>
+<option value="Jamaica">Jamaica (+1 876)</option>
+<option value="Jan Mayen">Jan Mayen (+47 79)</option>
+<option value="Japan">Japan (+81)</option>
+<option value="Jersey">Jersey (+44 1534)</option>
+<option value="Jordan">Jordan (+962)</option>
+<option value="Kazakhstan">Kazakhstan (+7 6, +7 7)</option>
+<option value="Kenya">Kenya (+254)</option>
+<option value="Kiribati">Kiribati (+686)</option>
+<option value="Korea, North">Korea, North (+850)</option>
+<option value="Korea, South">Korea, South (+82)</option>
+<option value="Kosovo">Kosovo (+383, +377 44, +377 45, +386 43, +386 49, +381 28, +381 29, +381 38, +381 39)</option>
+<option value="Kuwait">Kuwait (+965)</option>
+<option value="Kyrgyzstan">Kyrgyzstan (+996)</option>
+<option value="Laos">Laos (+856)</option>
+<option value="Latvia">Latvia (+371)</option>
+<option value="Lebanon">Lebanon (+961)</option>
+<option value="Lesotho">Lesotho (+266)</option>
+<option value="Liberia">Liberia (+231)</option>
+<option value="Libya">Libya (+218)</option>
+<option value="Liechtenstein">Liechtenstein (+423)</option>
+<option value="Lithuania">Lithuania (+370)</option>
+<option value="Luxembourg">Luxembourg (+352)</option>
+<option value="Macau">Macau (+853)</option>
+<option value="Macedonia">Macedonia (+389)</option>
+<option value="Madagascar">Madagascar (+261)</option>
+<option value="Malawi">Malawi (+265)</option>
+<option value="Malaysia">Malaysia (+60)</option>
+<option value="Maldives">Maldives (+960)</option>
+<option value="Mali">Mali (+223)</option>
+<option value="Malta">Malta (+356)</option>
+<option value="Marshall Islands">Marshall Islands (+692)</option>
+<option value="Martinique">Martinique (+596)</option>
+<option value="Mauritania">Mauritania (+222)</option>
+<option value="Mauritius">Mauritius (+230)</option>
+<option value="Mayotte">Mayotte (+262 269, +262 639)</option>
+<option value="Mexico">Mexico (+52)</option>
+<option value="Micronesia, Federated States of">Micronesia, Federated States of (+691)</option>
+<option value="Midway Island, USA">Midway Island, USA (+1 808)</option>
+<option value="Moldova">Moldova (+373)</option>
+<option value="Monaco">Monaco (+377)</option>
+<option value="Mongolia">Mongolia (+976)</option>
+<option value="Montenegro">Montenegro (+382)</option>
+<option value="Montserrat">Montserrat (+1 664)</option>
+<option value="Morocco">Morocco (+212)</option>
+<option value="Mozambique">Mozambique (+258)</option>
+<option value="Myanmar">Myanmar (+95)</option>
+<option value="Nagorno-Karabakh">Nagorno-Karabakh (+374 47, +374 97)</option>
+<option value="Namibia">Namibia (+264)</option>
+<option value="Nauru">Nauru (+674)</option>
+<option value="Nepal">Nepal (+977)</option>
+<option value="Netherlands">Netherlands (+31)</option>
+<option value="Nevis">Nevis (+1 869)</option>
+<option value="New Caledonia">New Caledonia (+687)</option>
+<option value="New Zealand">New Zealand (+64)</option>
+<option value="Nicaragua">Nicaragua (+505)</option>
+<option value="Niger">Niger (+227)</option>
+<option value="Nigeria">Nigeria (+234)</option>
+<option value="Niue">Niue (+683)</option>
+<option value="Norfolk Island">Norfolk Island (+672 3)</option>
+<option value="Northern Cyprus">Northern Cyprus (+90 392)</option>
+<option value="Northern Ireland">Northern Ireland (+44 28)</option>
+<option value="Northern Mariana Islands">Northern Mariana Islands (+1 670)</option>
+<option value="Norway">Norway (+47)</option>
+<option value="Oman">Oman (+968)</option>
+<option value="Pakistan">Pakistan (+92)</option>
+<option value="Palau">Palau (+680)</option>
+<option value="Palestine, State of">Palestine, State of (+970)</option>
+<option value="Panama">Panama (+507)</option>
+<option value="Papua New Guinea">Papua New Guinea (+675)</option>
+<option value="Paraguay">Paraguay (+595)</option>
+<option value="Peru">Peru (+51)</option>
+<option value="Philippines">Philippines (+63)</option>
+<option value="Pitcairn Islands">Pitcairn Islands (+64)</option>
+<option value="Poland">Poland (+48)</option>
+<option value="Portugal">Portugal (+351)</option>
+<option value="Puerto Rico">Puerto Rico (+1 787, +1 939)</option>
+<option value="Qatar">Qatar (+974)</option>
+<option value="Réunion">Réunion (+262)</option>
+<option value="Romania">Romania (+40)</option>
+<option value="Russia">Russia (+7)</option>
+<option value="Rwanda">Rwanda (+250)</option>
+<option value="Saba">Saba (+599 4)</option>
+<option value="Saint Barthélemy">Saint Barthélemy (+590)</option>
+<option value="Saint Helena">Saint Helena (+290)</option>
+<option value="Saint Kitts and Nevis">Saint Kitts and Nevis (+1 869)</option>
+<option value="Saint Lucia">Saint Lucia (+1 758)</option>
+<option value="Saint Martin (France)">Saint Martin (France) (+590)</option>
+<option value="Saint Pierre and Miquelon">Saint Pierre and Miquelon (+508)</option>
+<option value="Saint Vincent and the Grenadines">Saint Vincent and the Grenadines (+1 784)</option>
+<option value="Samoa">Samoa (+685)</option>
+<option value="San Marino">San Marino (+378)</option>
+<option value="São Tomé and Príncipe">São Tomé and Príncipe (+239)</option>
+<option value="Saudi Arabia">Saudi Arabia (+966)</option>
+<option value="Senegal">Senegal (+221)</option>
+<option value="Serbia">Serbia (+381)</option>
+<option value="Seychelles">Seychelles (+248)</option>
+<option value="Sierra Leone">Sierra Leone (+232)</option>
+<option value="Singapore">Singapore (+65)</option>
+<option value="Sint Eustatius">Sint Eustatius (+599 3)</option>
+<option value="Sint Maarten (Netherlands)">Sint Maarten (Netherlands) (+1 721)</option>
+<option value="Slovakia">Slovakia (+421)</option>
+<option value="Slovenia">Slovenia (+386)</option>
+<option value="Solomon Islands">Solomon Islands (+677)</option>
+<option value="Somalia">Somalia (+252)</option>
+<option value="South Africa">South Africa (+27)</option>
+<option value="South Georgia and the South Sandwich Islands">South Georgia and the South Sandwich Islands (+500)</option>
+<option value="South Ossetia">South Ossetia (+995 34)</option>
+<option value="South Sudan">South Sudan (+211)</option>
+<option value="Spain">Spain (+34)</option>
+<option value="Sri Lanka">Sri Lanka (+94)</option>
+<option value="Sudan">Sudan (+249)</option>
+<option value="Suriname">Suriname (+597)</option>
+<option value="Svalbard">Svalbard (+47 79)</option>
+<option value="Eswatini">Eswatini (+268)</option>
+<option value="Sweden">Sweden (+46)</option>
+<option value="Switzerland">Switzerland (+41)</option>
+<option value="Syria">Syria (+963)</option>
+<option value="Taiwan">Taiwan (+886)</option>
+<option value="Tajikistan">Tajikistan (+992)</option>
+<option value="Tanzania">Tanzania (+255)</option>
+<option value="Thailand">Thailand (+66)</option>
+<option value="Togo">Togo (+228)</option>
+<option value="Tokelau">Tokelau (+690)</option>
+<option value="Tonga">Tonga (+676)</option>
+<option value="Transnistria">Transnistria (+373 2)</option>
+<option value="Trinidad and Tobago">Trinidad and Tobago (+1 868)</option>
+<option value="Tristan da Cunha">Tristan da Cunha (+290)</option>
+<option value="Tunisia">Tunisia (+216)</option>
+<option value="Turkey">Turkey (+90)</option>
+<option value="Turkmenistan">Turkmenistan (+993)</option>
+<option value="Turks and Caicos Islands">Turks and Caicos Islands (+1 649)</option>
+<option value="Tuvalu">Tuvalu (+688)</option>
+<option value="Uganda">Uganda (+256)</option>
+<option value="Ukraine">Ukraine (+380)</option>
+<option value="United Arab Emirates">United Arab Emirates (+971)</option>
+<option value="United Kingdom">United Kingdom (+44)</option>
+<option value="United States">United States (+1)</option>
+<option value="Universal Personal Telecommunications (UPT)">Universal Personal Telecommunications (UPT) (+878)</option>
+<option value="Uruguay">Uruguay (+598)</option>
+<option value="Uzbekistan">Uzbekistan (+998)</option>
+<option value="Vanuatu">Vanuatu (+678)</option>
+<option value="Vatican City State (Holy See)">Vatican City State (Holy See) (+379)</option>
+<option value="Venezuela">Venezuela (+58)</option>
+<option value="Vietnam">Vietnam (+84)</option>
+<option value="Virgin Islands, British">Virgin Islands, British (+1 284)</option>
+<option value="Virgin Islands, U.S.">Virgin Islands, U.S. (+1 340)</option>
+<option value="Wallis and Futuna">Wallis and Futuna (+681)</option>
+<option value="Yemen">Yemen (+967)</option>
+<option value="Zambia">Zambia (+260)</option>
+<option value="Zimbabwe">Zimbabwe (+263)</option>
+
+
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label for="mobile">Mobile No <span class="required">*</span></label>
+                    <input type="text" id="mobile" name="mobile" required oninput="validateMobile()">
+                    <span id="mobilemessage" style="color: red;"></span>
+                </div>
+                <button type="button" onclick="validatePersonalInfo()">Next</button>
+
+            </div>
+
+            <!-- Additional Info Section -->
+            <div id="additional-info-section" class="hidden">
+                <div class="input-group">
+                    <label for="dob">Date of Birth (DD/MM/YYYY) <span class="required">*</span></label>
+                    <input type="text" id="dob" name="dob" required pattern="\d{2}/\d{2}/\d{4}" onblur="validateDOB()">
+                    <span id="dobmessage" style="color: red;"></span>
+                </div>
+                <div class="input-group">
+                    <label for="age">Age</label>
+                    <input type="text" id="age" name="age" readonly>
+                </div>
+                <div class="input-group">
+                    <label for="gender">Gender <span class="required">*</span></label>
+                    <select id="gender" name="gender" required>
+                        <option value="">Select Gender</option>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                        <option value="Transgender">Transgender</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label for="exp">Years of Experience <span class="required">*</span></label>
+                    <input type="text" id="exp" name="exp" required>
+                </div>
+                <div class="input-group">
+                    <label for="prev">Previous Position<span class="required">*</span></label>
+                    <input type="text" id="prev" name="prev" required>
+                </div>
+                <div class="input-group">
+                    <label for="org">Past Organisation<span class="required">*</span></label>
+                    <input type="text" id="org" name="org" required>
+                </div>
+                <div class="input-group">
+                    <label for="course" class="form-label">Preferred Branch <span class="required">*</span></label>
+                    <select id="course" name="course" class="form-select" required>
+                        <option value="">Select branch</option>
+                        <option value="production">Production</option>
+                        <option value="finance">Finance</option>
+                        <option value="hr">HR</option>
+                        <option value="transport">Transport</option>
+                        <option value="sales">Sales</option>
+                        <option value="costings">Costings</option>
+                        <option value="marketing">Marketing</option>
+                        <option value="purchase">Purchase</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label for="bloodgroup" class="form-label">Blood group <span class="required">*</span></label>
+                    <select id="bloodgroup" name="bloodgroup" class="form-select" required>
+                        <option value="">Select Blood group</option>
+                        <option value="A+">A+</option>
+                        <option value="A-">A-</option>
+                        <option value="B+">B+</option>
+                        <option value="B-">B-</option>
+                        <option value="AB+">AB+</option>
+                        <option value="AB-">AB-</option>
+                        <option value="O+">O+</option>
+                        <option value="O-">O-</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label for="aadhar">Aadhar Number <span class="required">*</span></label>
+                    <input type="text" id="aadhar" name="aadhar" required onblur="validateAadhar()">
+                    <span id="aadharmessage" style="color: red;"></span>
+                </div>
+                <div class="input-group">
+                    <label for="pan">PAN Number <span class="required">*</span></label>
+                    <input type="text" id="pan" name="pan" required onblur="validatePAN()">
+                    <span id="panmessage" style="color: red;"></span>
+                </div>
+                <div class="input-group">
+                    <label for="resume">Resume Upload<span class="required">*</span></label>
+                    <input type="file" id="resume" name="resume" accept=".pdf,.doc,.docx" required onblur="validateResumeUpload">
+                    <span class="form-message" id="resumeMessage"></span>
+                </div>
+                
+                <div class="button-container">
+                    <button type="button" onclick="goBackToPersonalInfo()">Back</button>
+                    <button type="submit">Submit</button>
+                </div>
+            </div>
+        </form>
+        <div id="personal-info" class="hidden"></div>
+    </div>
+
+    <script>
+        // script.js
+document.addEventListener('DOMContentLoaded', function() {
+    var dropdowns = document.querySelectorAll('.dropdown-btn');
+    dropdowns.forEach(function(dropdown) {
+        dropdown.addEventListener('click', function() {
+            this.classList.toggle('active');
+            var dropdownContent = this.nextElementSibling;
+            if (dropdownContent.style.display === 'block') {
+                dropdownContent.style.display = 'none';
+            } else {
+                dropdownContent.style.display = 'block';
+            }
+        });
+    });
+});
+
+         function navigateToPage(page) {
+            window.location.href = page;
+        }
+        function validateEmail() {
+            const email = document.getElementById("email").value;
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            const emailMessage = document.getElementById("emailmessage");
+
+            if (!emailRegex.test(email)) {
+                emailMessage.textContent = "Invalid email format";
+            } else {
+                emailMessage.textContent = "";
+            }
+        }
+        function validateResumeUpload() {
+    const resumeInput = document.getElementById('resume');
+    const resumeMessage = document.getElementById('resumeMessage');
+
+    // Check if resume file is not uploaded
+    if (resumeInput.files.length === 0) {
+        resumeMessage.textContent = 'Please upload your resume.';
+        resumeMessage.classList.add('error');
+        return false;
+    } else {
+        resumeMessage.textContent = ''; // Clear any previous error message
+        resumeMessage.classList.remove('error');
+        return true;
+    }
+}
+
+
+        function validateMobile() {
+    const mobileNumberField = document.getElementById('mobile');
+    const mobileMessage = document.getElementById('mobilemessage');
+    const pattern = new RegExp(mobileNumberField.getAttribute('pattern'));
+    const phoneCodeLength = mobileNumberField.value.match(/\+\d+/)[0].length;
+    
+    if (mobileNumberField.value.length > phoneCodeLength && !pattern.test(mobileNumberField.value)) {
+        mobileMessage.textContent = 'Please enter a valid mobile number.';
+    } else {
+        mobileMessage.textContent = '';
+    }
+}
+
+
+        
+        
+
+        
+
+        function showAdditionalInfo() {
+            document.getElementById('personal-info-section').classList.add('hidden');
+            document.getElementById('additional-info-section').classList.remove('hidden');
+        }
+
+        function showPersonalInfo() {
+            document.getElementById('personal-info-section').classList.remove('hidden');
+            document.getElementById('additional-info-section').classList.add('hidden');
+        }
+
+        function validatePersonalInfo() {
+            let isValid = true;
+            const requiredFields = document.querySelectorAll('#personal-info-section input[required], #personal-info-section select[required]');
+            
+            requiredFields.forEach(field => {
+                if (!field.value.trim()) {
+                    isValid = false;
+                    field.classList.add('empty-field');
+                } else {
+                    field.classList.remove('empty-field');
+                }
+            });
+
+            
+            const email = document.getElementById("email").value;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const emailMessage = document.getElementById("emailmessage");
+
+    if (!emailRegex.test(email)) {
+        emailMessage.textContent = "Invalid email format";
+        isValid = false;
+    } else {
+        emailMessage.textContent = "";
+    }
+    
+
+
+            if (isValid) {
+                showAdditionalInfo();
+            } else {
+                alert('Please fill in all required fields or correct invalid inputs.');
+            }
+        }
+        function validateAdditionalInfo() {
+    let isValid = true;
+    const requiredFields = document.querySelectorAll('#additional-info-section input[required], #additional-info-section select[required]');
+    
+    requiredFields.forEach(field => {
+        if (!field.value.trim()) {
+            isValid = false;
+            field.classList.add('empty-field');
+        } else {
+            field.classList.remove('empty-field');
+        }
+    });
+
+    const resume = document.getElementById("resume").files[0];
+    const resumeMessage = document.getElementById("resumemessage");
+
+    if (!resume && document.getElementById("additional-info-section").classList.contains("hidden")) {
+        resumeMessage.textContent = "Please upload your resume";
+        isValid = false;
+    } else {
+        resumeMessage.textContent = "";
+    }
+
+    // Additional validation logic for age, date of birth, etc.
+
+    if (isValid) {
+        // Proceed to submit or next step
+    } else {
+        alert('Please fill in all required fields or correct invalid inputs.');
+    }
+}
+
+        // Function to display the personal information after form submission
+        function displayPersonalInfo(formData) {
+    const personalInfo = document.getElementById("personal-info");
+    personalInfo.innerHTML = `
+        <h3>Personal Details</h3>
+        <p><strong>First Name:</strong> ${formData.get("fname")}</p>
+        <p><strong>Last Name:</strong> ${formData.get("lname")}</p>
+        <p><strong>Email:</strong> ${formData.get("email")}</p>
+        <p><strong>Door No:</strong> ${formData.get("door")}</p>
+        <p><strong>Street:</strong> ${formData.get("street")}</p>
+        <p><strong>City:</strong> ${formData.get("city")}</p>
+        <p><strong>District:</strong> ${formData.get("district")}</p>
+        <p><strong>State:</strong> ${formData.get("state")}</p>
+        <p><strong>Country:</strong> ${formData.get("country")}</p>
+        <p><strong>Mobile:</strong> ${formData.get("mobile")}</p>
+        <p><strong>Date of Birth:</strong> ${formData.get("dob")}</p>
+        <p><strong>Age:</strong> ${formData.get("age")}</p>
+        <p><strong>Gender:</strong> ${formData.get("gender")}</p>
+        <p><strong>Years of Experience:</strong> ${formData.get("exp")}</p>
+        <p><strong>Previous Position:</strong> ${formData.get("prev")}</p>
+        <p><strong>Past Organisation:</strong> ${formData.get("org")}</p>
+        <p><strong>Preferred Branch:</strong> ${formData.get("course")}</p>
+        <p><strong>Blood Group:</strong> ${formData.get("bloodgroup")}</p>
+        <p><strong>Aadhar Number:</strong> ${formData.get("aadhar")}</p>
+        <p><strong>PAN Number:</strong> ${formData.get("pan")}</p>
+        <p><strong>Resume:</strong> ${formData.get("resume").name}</p>
+    `;
+
+    personalInfo.classList.remove("hidden");
+
+    const editButton = document.createElement("button");
+    editButton.textContent = "Edit";
+    editButton.addEventListener("click", editPersonalInfo);
+    personalInfo.appendChild(editButton);
+
+    
+
+    const nextButton = document.createElement("button");
+    nextButton.textContent = "Next";
+    nextButton.addEventListener("click", goToSuccessPage);
+    personalInfo.appendChild(nextButton);
+
+    // Store form data in localStorage for editing purposes
+    const data = {};
+    formData.forEach((value, key) => {
+        data[key] = value;
+    });
+    
+    localStorage.setItem('formData', JSON.stringify(data));
+
+    // Hide the registration form
+    document.getElementById("registrationForm").classList.add("hidden");
+}
+
+function editPersonalInfo() {
+    // Retrieve the stored form data
+    const storedData = JSON.parse(localStorage.getItem('formData'));
+
+    if (storedData) {
+        // Populate the form with stored values
+        for (const key in storedData) {
+            const element = document.getElementById(key);
+            if (element) {
+                if (element.type === 'file') continue; // Skip file input fields
+                element.value = storedData[key];
+            }
+        }
+
+        // Show the appropriate section
+        if (storedData['dob'] || storedData['exp']) { // Check if we should show additional info section
+            showAdditionalInfo();
+        } else {
+            goBackToPersonalInfo();
+        }
+    }
+
+    // Hide the personal info display and show the form
+    document.getElementById("personal-info").classList.add("hidden");
+    document.getElementById("registrationForm").classList.remove("hidden");
+}
+
+
+function goToSuccessPage() {
+    // Redirect to the success page
+    window.location.href = "sign_up successful.html";
+}
+
+
+
+
+// Helper functions to toggle form sections
+function showAdditionalInfo() {
+    document.getElementById("personal-info-section").classList.add("hidden");
+    document.getElementById("additional-info-section").classList.remove("hidden");
+}
+
+function goBackToPersonalInfo() {
+    document.getElementById("additional-info-section").classList.add("hidden");
+    document.getElementById("personal-info-section").classList.remove("hidden");
+}
+
+
+    // Add this function to toggle back to display mode
+    function showPersonalInfo() {
+        document.getElementById("personal-info").classList.remove("hidden");
+        document.getElementById("registrationForm").classList.add("hidden");
+    }
+
+    document.getElementById("registrationForm").addEventListener("submit", async function (event) {
+    event.preventDefault();
+
+    const isAadharValid = validateAadhar();
+    const isPANValid = validatePAN();
+    const isDOBValid = validateDOB(); // Validate Date of Birth
+
+    if (isAadharValid && isPANValid && isDOBValid) { // Check all validations including DOB
+        const formData = new FormData(this);
+        displayPersonalInfo(formData);
+
+        try {
+            const response = await fetch('/submit-form', {
+                method: 'POST',
+                body: formData
+            });
+
+            if (response.ok) {
+                alert('Form data saved successfully');
+                displayPersonalInfo(formData); // Display the submitted data
+                this.reset(); // Reset the form to initial state
+                document.getElementById("personal-info-section").classList.add("hidden");
+                document.getElementById("additional-info-section").classList.add("hidden");
+            } else {
+                const error = await response.text();
+                alert('Error: ' + error);
+            }
+        } catch (error) {
+            alert('Error: ' + error.message);
+        }
+    } else {
+        alert('Please enter valid the correct format before submitting the form or ensure age is 18 years or older.');
+    }
+});
+
+
+function validateAadhar() {
+    const aadhar = document.getElementById("aadhar").value;
+    const aadharMessage = document.getElementById("aadharmessage");
+    const aadharRegex = /^\d{12}$/;
+
+    if (!aadharRegex.test(aadhar)) {
+        aadharMessage.textContent = "Invalid Aadhar number";
+        return false;
+    } else {
+        aadharMessage.textContent = "";
+        return true;
+    }
+}
+
+function validatePAN() {
+    const pan = document.getElementById("pan").value;
+    const panMessage = document.getElementById("panmessage");
+    const panRegex = /^[A-Z]{5}\d{4}[A-Z]{1}$/;
+
+    if (!panRegex.test(pan)) {
+        panMessage.textContent = "Invalid PAN number";
+        return false;
+    } else {
+        panMessage.textContent = "";
+        return true;
+    }
+}
+// Function to calculate age based on Date of Birth (DOB)
+function calculateAge(dob) {
+    const today = new Date();
+    const birthDate = new Date(dob);
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const monthDiff = today.getMonth() - birthDate.getMonth();
+
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+        age--;
+    }
+
+    return age;
+}
+
+// Function to validate Date of Birth (DOB)
+function validateDOB() {
+    const dob = document.getElementById("dob").value.trim();
+    const dobRegex = /^\d{2}\/\d{2}\/\d{4}$/;
+    const dobMessage = document.getElementById("dobmessage");
+
+    if (!dobRegex.test(dob)) {
+        dobMessage.textContent = "Invalid date format (DD/MM/YYYY)";
+        return false; // Invalid date format
+    }
+
+    const parts = dob.split("/");
+    const day = parseInt(parts[0], 10);
+    const month = parseInt(parts[1], 10) - 1; // Month is zero-indexed
+    const year = parseInt(parts[2], 10);
+
+    const dateOfBirth = new Date(year, month, day);
+    if (
+        dateOfBirth.getFullYear() === year &&
+        dateOfBirth.getMonth() === month &&
+        dateOfBirth.getDate() === day
+    ) {
+        dobMessage.textContent = "";
+        const age = calculateAge(dateOfBirth);
+        document.getElementById("age").value = age;
+        
+        // Age validation (if needed)
+        if (age < 18) {
+            dobMessage.textContent = "Age must be 18 years or older";
+            return false;
+        } else {
+            return true;
+        }
+    } else {
+        dobMessage.textContent = "Invalid date";
+        return false; // Invalid date
+    }
+}
+
+
+        function updatePhoneCode() {
+    const countrySelect = document.getElementById("country");
+    const selectedOption = countrySelect.options[countrySelect.selectedIndex];
+    const phoneCodeMatch = selectedOption.textContent.match(/\(\+(\d+)\)$/); // Match the phone code
+
+    if (phoneCodeMatch) {
+        const phoneCode = '+' + phoneCodeMatch[1]; // Include the + symbol before the phone code
+        const mobileInput = document.getElementById("mobile");
+        mobileInput.value = phoneCode;
+    }
+}
+
+    </script>
+</body>
+</html>

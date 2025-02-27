@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Custom Grading System</title>
+    <style>
+        body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f2f5;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    display: flex;
+    flex-direction: column-reverse;
+    margin-left: 280px;
+    justify-content: center; /* Center the content horizontally */
+    align-items: center; /* Center items vertically */
+    margin-top: 90px;
+    padding-top: 0; /* Increased top padding */
+}
+
+
+
+.main-content {
+    width: 94%;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+#content-area {
+    padding: 30px;
+}
+
+h2 {
+    color: #333;
+}
+
+.grade-input {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.grade-input label {
+    flex: 1;
+    font-weight: bold;
+    color: #555;
+}
+
+.input-field {
+    flex: 2;
+    padding: 10px;
+    margin-left: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.input-field + .input-field {
+    margin-left: 10px;
+}
+
+button {
+    background-color: #094b5f;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-right: 10px;
+}
+
+button:hover {
+    background-color: #287289;
+}
+    </style>
+</head>
+<body>
+    <div id="navbar-placeholder"></div>
+    <div id="sidebar-placeholder"></div>
+    <div class="container">
+        <div class="main-content">
+            <div id="content-area">
+                <h2>Custom Grading System</h2>
+                <form id="grading-form">
+                    <div id="grade-inputs"></div>
+                    <button type="button" class="add-grade-button" onclick="addGradeInput()">Add Grade</button>
+                    <button type="button" class="remove-grade-button" onclick="removeGradeInput()">Remove Grade</button>
+                    <button type="button" class="save-button" onclick="saveGradingSystem()">Save Grading System</button>
+                </form>
+            </div>
+        </div>
+        <!-- Down right arrow link -->
+        <a href="index.html" class="down-right-arrow">
+            <!-- SVG down right arrow icon -->
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="#fff">
+                <path d="M14.58 16.58l-4.59-4.59L14.58 7.4a.996.996 0 0 0 0-1.41 1.01 1.01 0 0 0-1.42 0l-6 6a.996.996 0 0 0 0 1.41l6 6c.39.39 1.03.39 1.42 0a.996.996 0 0 0 0-1.41z"/>
+            </svg>
+        </a>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+    addGradeInput(); // Add the first grade input by default
+
+    // Add button click handlers
+    document.querySelector('.add-grade-button').addEventListener('click', addGradeInput);
+    document.querySelector('.remove-grade-button').addEventListener('click', removeGradeInput);
+    document.querySelector('.save-button').addEventListener('click', saveGradingSystem);
+
+    function addGradeInput() {
+        const gradeInputsContainer = document.getElementById('grade-inputs');
+
+        const gradeInputDiv = document.createElement('div');
+        gradeInputDiv.className = 'grade-input';
+
+        const gradeLabelInput = document.createElement('input');
+        gradeLabelInput.type = 'text';
+        gradeLabelInput.placeholder = 'Grade Label';
+        gradeLabelInput.className = 'input-field grade-label';
+
+        const gradeMinInput = document.createElement('input');
+        gradeMinInput.type = 'number';
+        gradeMinInput.placeholder = 'Min marks';
+        gradeMinInput.className = 'input-field grade-min';
+
+        const gradeMaxInput = document.createElement('input');
+        gradeMaxInput.type = 'number';
+        gradeMaxInput.placeholder = 'Max marks';
+        gradeMaxInput.className = 'input-field grade-max';
+
+        gradeInputDiv.appendChild(gradeLabelInput);
+        gradeInputDiv.appendChild(gradeMinInput);
+        gradeInputDiv.appendChild(gradeMaxInput);
+
+        gradeInputsContainer.appendChild(gradeInputDiv);
+    }
+
+    function removeGradeInput() {
+        const gradeInputsContainer = document.getElementById('grade-inputs');
+        const gradeInputs = gradeInputsContainer.getElementsByClassName('grade-input');
+
+        if (gradeInputs.length > 0) {
+            gradeInputsContainer.removeChild(gradeInputs[gradeInputs.length - 1]);
+        }
+    }
+
+    async function saveGradingSystem() {
+        const gradingSystem = [];
+        let valid = true;
+
+        document.querySelectorAll('.grade-input').forEach(inputDiv => {
+            const label = inputDiv.querySelector('.grade-label').value.trim();
+            const min = inputDiv.querySelector('.grade-min').value.trim();
+            const max = inputDiv.querySelector('.grade-max').value.trim();
+
+            if (!label || !min || !max) {
+                valid = false;
+            } else {
+                gradingSystem.push({ label, min: parseFloat(min), max: parseFloat(max) });
+            }
+        });
+
+        if (!valid) {
+            alert('Please fill out all fields before saving.');
+        } else {
+            const role = localStorage.getItem('currentRole');
+            const response = await fetch('/saveGrading', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ role, gradingSystem })
+            });
+
+            if (response.ok) {
+                alert('Grading system saved successfully!');
+              
+            } else {
+                alert('Error saving grading system.');
+            }
+        }
+    }
+});
+
+    </script>
+        <script>
+            function loadHTML(id, url) {
+                var xhr = new XMLHttpRequest();
+                xhr.open('GET', url, true);
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState == 4 && xhr.status == 200) {
+                        document.getElementById(id).innerHTML = xhr.responseText;
+                        // Initialize dropdowns after sidebar is loaded
+                        if (id === 'sidebar-placeholder') {
+                            initializeDropdowns();
+                        }
+                    }
+                };
+                xhr.send();
+            }
+    
+            function initializeDropdowns() {
+                console.log('Initializing dropdowns...');
+                var dropdowns = document.querySelectorAll('.dropdown-btn');
+                dropdowns.forEach(function(dropdown) {
+                    dropdown.addEventListener('click', function() {
+                        this.classList.toggle('active');
+                        var dropdownContent = this.nextElementSibling;
+                        if (dropdownContent.style.display === 'block') {
+                            dropdownContent.style.display = 'none';
+                        } else {
+                            dropdownContent.style.display = 'block';
+                        }
+                    });
+                });
+                console.log('Dropdowns initialized');
+            }
+    
+            document.addEventListener('DOMContentLoaded', function() {
+                loadHTML('navbar-placeholder', 'navbar.html');
+                loadHTML('sidebar-placeholder', 'sidebar.html');
+            });
+        </script>
+</body>
+</html>

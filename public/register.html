@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background: url('register.jpg') no-repeat center center fixed;
+            background-size: cover;
+        }
+    
+        .container {
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(231, 149, 225, 0.1);
+            width: 300px;
+        }
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+        }
+        h2 {
+            margin-bottom: 20px;
+            text-align: center;
+            color: #2f2a2a;
+        }
+        
+        .input-group {
+            margin-bottom: 15px;
+        }
+    
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+    
+        .input-group input {
+            width: calc(100% - 30px); /* Adjusted width to fit within the container */
+            padding: 10px;
+            box-sizing: border-box;
+            border: 1px solid #094b5f;
+            border-radius: 3px;
+        }
+
+        .input-group .visibility-toggle {
+            position: relative;
+            margin-left: -30px;
+            width: 30px;
+            line-height: 40px;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        button {
+            width: calc(50% - 5px); /* Adjusted width to fit within the container */
+            padding: 10px;
+            background-color: #094b5f;
+            border: none;
+            border-radius: 3px;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    
+        button:hover {
+            background-color: #073944;
+        }
+    
+        #reg-error-message {
+            color: red;
+            margin-top: 10px;
+            text-align: center;
+        }
+    
+        .google-btn {
+            border: none;
+            cursor: pointer;
+            padding: 10px;
+            margin-top: 3px;
+            background: none;
+        }
+    
+        .google-btn img {
+            width: 40px;
+            height: 40px;
+        }
+
+        .strength-indicator {
+            margin-top: 5px;
+            font-size: 12px;
+            text-align: center;
+        }
+    
+        .weak {
+            color: red;
+        }
+    
+        .medium {
+            color: orange;
+        }
+    
+        .strong {
+            color: green;
+        }
+    </style>
+    
+</head>
+<body>
+    <div class="container" id="register-container">
+        <h2>REGISTER</h2>
+        <form id="registerForm">
+            <div class="input-group">
+                <label for="name">Name</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+            <div class="input-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            <div class="input-group">
+                <label for="reg-password">New Password</label>
+                <input type="password" id="reg-password" name="password" required>
+                <span class="visibility-toggle" id="password-toggle" onclick="togglePasswordVisibility('reg-password')">
+                    <i class="fa fa-eye" id="eye-icon"></i>
+                </span>
+                <div class="strength-indicator" id="password-strength"></div>
+            </div>
+            <div class="input-group">
+                <label for="cpassword">Confirm Password</label>
+                <input type="password" id="cpassword" name="cpassword" required>
+                <span class="visibility-toggle" id="cpassword-toggle" onclick="togglePasswordVisibility('cpassword')">
+                    <i class="fa fa-eye" id="cpassword-eye-icon"></i>
+                </span>
+            </div>
+            
+            <div class="button-group">
+                <button id="registerBtn">Register</button>
+                <button id="forgotPasswordBtn">Login</button>
+            </div>
+        </form>
+        <div id="reg-error-message"></div>
+        <button class="google-btn" id="googleRegisterBtn">
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <i class="fa-brands fa-google"></i>
+        </button>
+        
+    </div>
+    <script>
+        function togglePasswordVisibility(id) {
+            var passwordField = document.getElementById(id);
+            var eyeIcon = document.getElementById(id + '-eye-icon');
+
+            if (passwordField.type === "password") {
+                passwordField.type = "text";
+                eyeIcon.classList.remove('fa-eye');
+                eyeIcon.classList.add('fa-eye-slash');
+            } else {
+                passwordField.type = "password";
+                eyeIcon.classList.remove('fa-eye-slash');
+                eyeIcon.classList.add('fa-eye');
+            }
+        }
+
+        document.getElementById('registerForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            var name = document.getElementById('name').value;
+            var email = document.getElementById('email').value;
+            var password = document.getElementById('reg-password').value;
+            var cpassword = document.getElementById('cpassword').value;
+            var errorMessage = document.getElementById('reg-error-message');
+            
+            if (name === "" || email === "" || password === "" || cpassword === "") {
+                errorMessage.textContent = "All fields are required!";
+            } else if (password !== cpassword) {
+                errorMessage.textContent = "Passwords do not match!";
+            } else if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_])/.test(password)) {
+                errorMessage.textContent = "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character!";
+            } else {
+
+                fetch('/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ name: name, email: email, password: password })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.message === "User registered successfully") {
+                        alert("Registration successful!");
+                        location.reload(); // Reload the page after successful registration
+                    } else {
+                        errorMessage.textContent = data.message || "Registration failed";
+                    }
+                })
+                .catch(error => {
+                    errorMessage.textContent = "An error occurred: " + error.message;
+                });
+            }
+        });
+        document.getElementById('googleRegisterBtn').addEventListener('click', function() {
+            alert("Redirecting to Google for registration...");
+            // Add actual Google OAuth redirect logic here
+        });
+
+        document.getElementById('forgotPasswordBtn').addEventListener('click', function() {
+            window.location.href = 'login.html';
+        });
+
+        // Password strength indicator function
+        document.getElementById('reg-password').addEventListener('input', function() {
+            var password = document.getElementById('reg-password').value;
+            var strengthBadge = document.getElementById('password-strength');
+            var strength = 0;
+
+            if (password.match(/[a-z]/)) {
+                strength += 1;
+            }
+            if (password.match(/[A-Z]/)) {
+                strength += 1;
+            }
+            if (password.match(/\d/)) {
+                strength += 1;
+            }
+            if (password.match(/[\W_]/)) {
+                strength += 1;
+            }
+
+            // Update the text indicator
+            switch (strength) {
+                case 0:
+                case 1:
+                case 2:
+                    strengthBadge.textContent = "Weak";
+                    strengthBadge.className = "weak";
+                    break;
+                case 3:
+                    strengthBadge.textContent = "Medium";
+                    strengthBadge.className = "medium";
+                    break;
+                case 4:
+                    strengthBadge.textContent = "Strong";
+                    strengthBadge.className = "strong";
+                    break;
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Engagement Survey</title>
+    <link rel="stylesheet">
+    <style>
+        body {
+        font-family: Arial, sans-serif;
+        background-color: #f0f2f5;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+    }
+
+    .container {
+        width: 60%;
+        margin: 50px auto;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        overflow: auto;
+        max-height: 80vh;
+    }
+
+    .header {
+        text-align: center;
+        position: relative;
+        margin-bottom: 20px;
+    }
+
+    form p {
+        font-size: 1.2em;
+    }
+
+    table {
+    width: 100%;
+    border-collapse: collapse;
+    
+    margin-bottom: 20px;
+}
+
+th, td {
+    padding: 10px;
+    text-align: center;
+    width: 14.28%; /* 1/7th of the table width for 7 columns */
+}
+th {
+    background-color: #f2f2f2;
+}
+
+td {
+    vertical-align: middle;
+}
+
+td input[type="radio"] {
+    margin: 0 auto; /* Center the radio buttons */
+    display: block;
+}
+
+
+    button {
+        display: inline-block;
+        width: auto;
+        padding: 10px;
+        background-color: #094b5f;
+        border: none;
+        border-radius: 5px;
+        font-size: 1em;
+        cursor: pointer;
+        color: #fff;
+        margin: 10px;
+    }
+
+    button:hover {
+        background-color: #287289;
+    }
+
+    .buttons {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .progress {
+        text-align: center;
+        margin-top: 20px;
+    }
+
+    .progress-bar {
+        width: 100%;
+        background-color: #ccc;
+        border-radius: 5px;
+        overflow: hidden;
+        margin: 10px 0;
+    }
+
+    .progress-bar-fill {
+        height: 20px;
+        background-color: #4caf50;
+        width: 0;
+        transition: width 0.3s;
+    }
+
+    .progress-text {
+        font-size: 1em;
+    }
+
+    #modal {
+        display: none;
+        position: fixed;
+        z-index: 1;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgb(0,0,0);
+        background-color: rgba(0,0,0,0.4);
+        padding-top: 60px;
+    }
+
+    .modal-content {
+        background-color: #fefefe;
+        margin: 5% auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 80%;
+        max-width: 500px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .close {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+    }
+
+    .close:hover,
+    .close:focus {
+        color: black;
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+    #newQuestion {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+
+    .custom-question {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 10px;
+    }
+
+    .question-text {
+        flex: 1;
+        margin-right: 10px;
+    }
+
+    .radio-buttons {
+        display: flex;
+        justify-content: space-around;
+    }
+
+    .custom-question button {
+        margin-left: 10px;
+        background-color: #094b5f;
+    }
+
+    .custom-question button:hover {
+        background-color:#094b5f;
+    }
+
+    .custom-question .select-question {
+        margin-right: 10px;
+    }
+
+    .buttons button {
+        display: inline-block;
+        width: auto;
+        padding: 10px;
+        background-color: #094b5f;
+        border: none;
+        border-radius: 5px;
+        font-size: 1em;
+        cursor: pointer;
+        color: #fff;
+        margin: 10px;
+    }
+
+    
+    .buttons button:hover {
+        background-color: #287289;
+    }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Engagement Feedback</h1>
+        </div>
+        <form id="engagementSurveyForm">
+            <p>Please rate your satisfaction with the following aspects of your onboarding experience:</p>
+            <table id="surveyTable">
+                <thead>
+                    <tr>
+                        <th>Select</th>
+                        <th>Question</th>
+                        <th>Highly Satisfied</th>
+                        <th>Satisfied</th>
+                        <th>Neither Satisfied nor Dissatisfied</th>
+                        <th>Dissatisfied</th>
+                        <th>Highly Dissatisfied</th>
+                    </tr>
+                </thead>
+                <tbody id="surveyBody">
+                    <!-- Add your survey questions here -->
+                </tbody>
+            </table>
+            <div id="engagementCustomQuestions"></div>
+        </form>
+
+        <div class="buttons">
+            <button type="button" onclick="showModal()">Add Question</button>
+            <button type="button" onclick="deleteSelectedQuestions()">Delete Selected Questions</button>
+        </div>
+        <div class="progress">
+            <span>Progress</span>
+            <div class="progress-bar">
+                <div class="progress-bar-fill" style="width: 0%;"></div>
+            </div>
+            <span class="progress-text">0%</span>
+        </div>
+        <button type="button" onclick="submitSurvey()">Save</button>
+    </div>
+
+    <!-- Modal for adding a new question -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2>Add a New Question</h2>
+            <input type="text" id="newQuestion" placeholder="Enter your question">
+            <button type="button" onclick="addCustomQuestion()">Add Question</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            loadCustomQuestions();
+
+            document.querySelectorAll('input[type="radio"]').forEach(function(radio) {
+                radio.addEventListener('change', updateProgress);
+            });
+        });
+
+        function updateProgress() {
+            const totalQuestions = document.querySelectorAll('table tr').length - 1 + document.querySelectorAll('#engagementCustomQuestions .custom-question').length;
+            const answeredQuestions = document.querySelectorAll('input[type="radio"]:checked').length;
+            const progressPercent = (answeredQuestions / totalQuestions) * 100;
+            document.querySelector('.progress-bar-fill').style.width = progressPercent + '%';
+            document.querySelector('.progress-text').textContent = Math.round(progressPercent) + '%';
+        }
+
+        function showModal() {
+            document.getElementById('modal').style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('modal').style.display = 'none';
+        }
+
+        function addCustomQuestion(questionText, saveToStorage = true) {
+            const customQuestionsDiv = document.getElementById('engagementCustomQuestions');
+            const existingQuestion = customQuestionsDiv.querySelector(`[data-question="${questionText}"]`);
+            if (existingQuestion) return; // Question already exists, do nothing
+
+            if (!questionText) {
+                questionText = document.getElementById('newQuestion').value;
+            }
+
+            if (questionText) {
+                const questionName = `custom_${questionText.replace(/\s+/g, '_')}`;
+                const newQuestionRow = document.createElement('tr');
+                newQuestionRow.classList.add('custom-question');
+                newQuestionRow.innerHTML = `
+                    <td><input type="checkbox" class="select-question"></td>
+                    <td>${questionText}</td>
+                    <td><input type="radio" name="${questionName}" value="5" required></td>
+                    <td><input type="radio" name="${questionName}" value="4"></td>
+                    <td><input type="radio" name="${questionName}" value="3"></td>
+                    <td><input type="radio" name="${questionName}" value="2"></td>
+                    <td><input type="radio" name="${questionName}" value="1"></td>
+                `;
+                newQuestionRow.dataset.question = questionText; // Add data-question attribute
+                customQuestionsDiv.appendChild(newQuestionRow);
+                document.getElementById('newQuestion').value = '';
+                closeModal();
+                updateProgress();
+                if (saveToStorage) {
+                    saveCustomQuestionToStorage(questionText); // Save to localStorage
+                }
+            }
+        }
+
+        function deleteSelectedQuestions() {
+            const selectedCheckboxes = document.querySelectorAll('.select-question:checked');
+            selectedCheckboxes.forEach(checkbox => {
+                const questionRow = checkbox.closest('tr');
+                const questionText = questionRow.dataset.question;
+                questionRow.parentNode.removeChild(questionRow);
+                removeCustomQuestionFromStorage(questionText);
+            });
+            updateProgress();
+        }
+
+        function saveCustomQuestionToStorage(questionText) {
+            const customQuestions = JSON.parse(localStorage.getItem('engagementCustomQuestions')) || [];
+            customQuestions.push(questionText);
+            localStorage.setItem('engagementCustomQuestions', JSON.stringify(customQuestions));
+        }
+
+        function removeCustomQuestionFromStorage(questionText) {
+            let customQuestions = JSON.parse(localStorage.getItem('engagementCustomQuestions')) || [];
+            customQuestions = customQuestions.filter(question => question !== questionText);
+            localStorage.setItem('engagementCustomQuestions', JSON.stringify(customQuestions));
+        }
+
+        function loadCustomQuestions() {
+            const customQuestions = JSON.parse(localStorage.getItem('engagementCustomQuestions')) || [];
+            customQuestions.forEach(function(questionText) {
+                addCustomQuestion(questionText, false); // Pass false to avoid saving to storage again
+            });
+            updateProgress(); // Update progress bar after loading custom questions
+        }
+
+        async function submitSurvey() {
+            const totalQuestions = document.querySelectorAll('table tr').length - 1 + document.querySelectorAll('#engagementCustomQuestions .custom-question').length;
+            const answeredQuestions = document.querySelectorAll('input[type="radio"]:checked').length;
+
+            if (answeredQuestions < totalQuestions) {
+                alert("Please answer all the questions before submitting.");
+                return;
+            }
+
+            const formData = new FormData(document.getElementById('engagementSurveyForm'));
+            const data = {};
+
+            for (const [key, value] of formData.entries()) {
+                data[key] = parseInt(value); // Assuming answers are integers
+            }
+
+            const customQuestions = JSON.parse(localStorage.getItem('engagementCustomQuestions')) || [];
+            customQuestions.forEach(question => {
+                const questionName = `custom_${question.replace(/\s+/g, '_')}`;
+                const radioButtons = document.getElementsByName(questionName);
+                radioButtons.forEach(radio => {
+                    if (radio.checked) {
+                        data[questionName] = parseInt(radio.value);
+                    }
+                });
+            });
+
+            try {
+                const response = await fetch('/EngagementSurvey', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                if (response.ok) {
+                    alert('Survey data saved successfully');
+                    document.getElementById('engagementSurveyForm').reset();
+                    updateProgress();
+
+                } else {
+                    alert('Error saving survey data');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error saving survey data');
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reset Password</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background: url('office 3.jpg') no-repeat center center fixed;
+            background-size: cover;
+        }
+        .container {
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(231, 149, 225, 0.1);
+            width: 300px;
+        }
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            margin-top: 10px
+        }
+        .button-group button {
+            width: calc(50% - 5px); /* Adjusted width to fit within the container */
+            padding: 10px;
+            background-color: #094b5f;
+            border: none;
+            border-radius: 3px;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        h2 {
+            margin-bottom: 20px;
+            text-align: center;
+            color: #2f2a2a;
+        }
+        
+        .input-group {
+            margin-bottom: 15px;
+        }
+    
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+    
+        .input-group input {
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+            border: 1px solid #094b5f;
+            border-radius: 3px;
+        }
+    
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #094b5f;
+            border: none;
+            border-radius: 3px;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    
+        button:hover {
+            background-color: #073944;
+        }
+    
+        #forgot-password-message {
+            color: red;
+            margin-top: 10px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>RESET PASSWORD</h2>
+        <form id="resetPasswordForm">
+            <div class="input-group">
+                <label for="new-password">New Password</label>
+                <input type="password" id="new-password" name="password" required>
+            </div>
+            <div class="input-group">
+                <label for="confirm-password">Confirm Password</label>
+                <input type="password" id="confirm-password" name="confirmPassword" required>
+            </div>
+            <button type="submit">Reset Password</button>
+        </form>
+        <div id="reset-password-message"></div>
+    </div>
+    <script>
+        document.getElementById('resetPasswordForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            var urlParams = new URLSearchParams(window.location.search);
+            var token = urlParams.get('token');
+            var newPassword = document.getElementById('new-password').value;
+            var confirmPassword = document.getElementById('confirm-password').value;
+            var resetPasswordMessage = document.getElementById('reset-password-message');
+
+            if (newPassword !== confirmPassword) {
+                resetPasswordMessage.textContent = "Passwords do not match!";
+                return;
+            }
+
+            fetch('/reset-password', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ token: token, password: newPassword })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    resetPasswordMessage.textContent = "Password reset successful!";
+                } else {
+                    resetPasswordMessage.textContent = data.message;
+                }
+            })
+            .catch(error => {
+                resetPasswordMessage.textContent = "An error occurred: " + error.message;
+            });
+        });
+    </script>
+</body>
+</html>

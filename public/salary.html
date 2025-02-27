@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Salary Management System</title>
+    <style>
+      body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    background-color: #f8f9fa;
+}
+
+/* Navbar styles */
+.navbar {
+    background: linear-gradient(90deg, #094b5f, #0056b3);
+    color: white;
+    padding: 15px 30px;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#nav-title {
+    font-size: 24px;
+}
+
+.navbar ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+}
+
+.navbar ul li {
+    margin-right: 20px;
+}
+
+.navbar ul li a {
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+    font-size: 1.2em;
+}
+
+.logout {
+    padding: 10px 20px;
+    background-color: #ffffff;
+    color: black;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s;
+    margin-left: 1080px;
+}
+
+.logout:hover {
+    background-color: #094b5f;
+    color: white;
+    transform: scale(1.1);
+}
+
+/* Sidebar styles */
+
+
+/* Content area */
+.content {
+    margin-left: 300px;
+    margin-top: 110px;
+    padding: 20px;
+    background-color: #f8f9fa;
+    overflow-y: auto;
+    transition: margin-left 0.3s ease-in-out;
+}
+
+.container {
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.header h1 {
+    margin: 0;
+    padding: 20px 0;
+}
+
+.buttons {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.progress {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.progress-bar {
+    width: 100%;
+    background-color: #ccc;
+    border-radius: 5px;
+    overflow: hidden;
+    margin: 10px 0;
+}
+
+.progress-bar-fill {
+    height: 20px;
+    background-color: #094b5f;
+}
+
+.progress-text {
+    display: block;
+    margin-top: 5px;
+    font-size: 0.8em;
+}
+
+/* Modal styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    position: relative;
+}
+
+.close {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    font-size: 30px;
+    font-weight: bold;
+    color: #888;
+    cursor: pointer;
+}
+
+.close:hover,
+.close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Form styles */
+form {
+    background: #fff;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+}
+
+input, select {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 20px;
+    box-sizing: border-box;
+}
+
+button {
+    padding: 10px 15px;
+    margin-right: 10px;
+    border: none;
+    background-color: #094b5f;
+    color: white;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+button[type="reset"] {
+    background-color: #d9534f;
+}
+
+.salary-details, .salary-changes, .employee-benefits, .update-salary {
+    background: #fff;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    max-width: 600px;
+    margin: 20px auto;
+    display: none;
+}
+
+.salary-info p {
+    margin: 5px 0;
+}
+
+button {
+    margin-top: 10px;
+}
+
+/* Table styles */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+table, th, td {
+    border: 1px solid #ddd;
+}
+
+th, td {
+    padding: 10px;
+    text-align: center;
+}
+
+th {
+    background-color: #f2f2f2;
+}
+
+h2 {
+    text-align: center;
+}
+
+/* Dropdown styles */
+/* styles.css */
+.sidebar {
+    width: 240px;
+    background-color: #ffffff;
+    padding: 20px;
+    box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+    position: fixed;
+    top: 105px;
+    bottom: 0;
+    overflow-y: auto;
+    transition: transform 0.3s ease-in-out;
+    z-index: 900;
+}
+
+.sidebar ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.sidebar ul li {
+    margin-bottom: 15px;
+}
+
+.sidebar ul li a, .dropdown-btn {
+    text-decoration: none;
+    color: #333;
+    font-weight: bold;
+    display: block;
+    padding: 8px 12px;
+    border-radius: 4px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.sidebar ul li a:hover, .dropdown-btn:hover {
+    background-color: #e0e0e0;
+    color: #094b5f;
+}
+
+.dropdown-container {
+    display: none;
+    margin-top: 10px;
+    padding-left: 20px;
+    margin-left: 20px;
+    font-size: 14px;
+    color:#817b7b;
+}
+
+.dropdown-btn::after {
+    content: ' \25BC';
+    float: right;
+}
+
+.dropdown-btn.active::after {
+    content: ' \25B2';
+}
+
+
+    </style>
+</head>
+<body>
+    <header class="navbar">
+        <nav>
+            <ul>
+                <li><a id="nav-title" href="#">Recruitment Management</a></li>
+            </ul>
+            <button class="logout">Logout</button>
+        </nav>
+    </header>
+    <aside class="sidebar">
+    <ul>
+        <li><a href="#link1">Personal Information</a></li>
+        <li><a href="#link1">Roles</a></li>
+        <li><a href="#link1">Rounds</a></li>
+        <li><a href="#link1">Failed applicants</a></li>
+        <li class="dropdown">
+            <span class="dropdown-btn">Job Details</span>
+            <ul class="dropdown-container">
+                <li><a href="jobdetails.html">Add Job Details</a></li>
+                <li><a href="viewjobdetails.html">View Job Details</a></li>
+            </ul>
+        </li>
+        <li class="dropdown">
+            <span class="dropdown-btn">Skill Inventory</span>
+            <ul class="dropdown-container">
+                <li><a href="applicant.html">Add Applicant Skills</a></li>
+                <li><a href="viewapplicant.html">View Applicant Skills</a></li>
+            </ul>
+        </li>
+        <li><a href="#link5">Salary Benefits</a></li>
+        <li><a href="#link6">Employee Benefits Information</a></li>
+        <li><a href="#link7">Employee Performance Data</a></li>
+        <li class="dropdown">
+            <span class="dropdown-btn">Employee Survey Data</span>
+            <ul class="dropdown-container">
+                <li><a href="survey1.html">Onboarding Survey</a></li>
+                <li><a href="survey2.html">Engagement Survey</a></li>
+                <li><a href="survey3.html">Exit Survey</a></li>
+            </ul>
+        </li>
+    </ul>
+    </aside>
+    <div class ="content">
+    <div class="container">
+        <div class="main-content">
+            <div id="salaryDataInput">
+                <h2>Salary Details</h2>
+                <form id="salary-form">
+                    <label for="employeeName">Employee Name:</label>
+                    <input type="text" id="employeeName" name="employeeName" required>
+
+                    <label for="basicSalary">Basic Salary:</label>
+                    <input type="number" id="basicSalary" name="basicSalary" required>
+
+                    <label for="tds">TDS % Deduction:</label>
+                    <input type="number" id="tds" name="tds" required>
+
+                    <label for="salaryChanges">Salary Changes:</label>
+                    <input type="number" id="salaryChanges" name="salaryChanges" required>
+
+                    <label for="maxIncrement">Maximum % Increment allowed:</label>
+                    <input type="number" id="maxIncrement" name="maxIncrement" required>
+
+                    <button type="submit">Confirm</button>
+                    <button type="reset">Cancel</button>
+                </form>
+            </div>
+            <div id="salaryDetails" class="salary-details">
+                <h2>Salary Data</h2>
+                <div class="salary-info">
+                    <p>Employee Name: <span id="displayEmployeeName"></span></p>
+                    <p>Basic Salary: Rs. <span id="displayBasicSalary"></span></p>
+                    <p>Net Salary: Rs. <span id="displayNetSalary"></span></p>
+                    <p>TDS % Deduction: <span id="displayTDS"></span>%</p>
+                    <p>Salary Changes: Rs. <span id="displaySalaryChanges"></span> incremented</p>
+                    <p>Maximum % increment allowed: <span id="displayMaxIncrement"></span>%</p>
+                </div>
+                <button id="viewPastChanges">View Past Changes</button>
+                <button id="viewEmployeeBenefits">View Employee Benefits</button>
+                <button id="updateSalaryDetail">Update Salary Detail</button>
+            </div>
+            <div id="pastChanges" class="salary-changes">
+                <h2>Past Salary Changes</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Type of Change</th>
+                            <th>Percentage Change</th>
+                            <th>New Salary</th>
+                            <th>Remarks</th>
+                        </tr>
+                    </thead>
+                    <tbody id="pastChangesTable"></tbody>
+                </table>
+                <h3>Add New Change</h3>
+                <form id="past-change-form">
+                    <label for="changeType">Type of Change:</label>
+                    <input type="text" id="changeType" name="changeType" required>
+
+                    <label for="percentageChange">Percentage Change:</label>
+                    <input type="number" id="percentageChange" name="percentageChange" required>
+
+                    <label for="newSalary">New Salary:</label>
+                    <input type="number" id="newSalary" name="newSalary" required>
+
+                    <label for="remarks">Remarks:</label>
+                    <input type="text" id="remarks" name="remarks" required>
+
+                    <button type="submit">Add Change</button>
+                </form>
+                <button id="backToDetailsFromChanges">Back</button>
+            </div>
+            <div id="employeeBenefits" class="employee-benefits">
+                <h2>Employee Benefits</h2>
+                <p>Health Insurance: Coverage up to Rs. 500,000 per year.</p>
+                <p>Retirement Plan: 10% company contribution to EPF.</p>
+                <p>Paid Leave: 20 days of paid leave per year.</p>
+                <p>Professional Development: Up to Rs. 50,000 per year for courses and certifications.</p>
+                <button id="backToDetailsFromBenefits">Back</button>
+            </div>
+            <div id="updateSalary" class="update-salary">
+                <h2>Update Salary Details</h2>
+                <form id="update-salary-form">
+                    <label for="newBasicSalary">New Basic Salary:</label>
+                    <input type="number" id="newBasicSalary" name="newBasicSalary" required>
+
+                    <label for="newTDS">New TDS % Deduction:</label>
+                    <input type="number" id="newTDS" name="newTDS" required>
+
+                    <label for="newSalaryChanges">New Salary Changes:</label>
+                    <input type="number" id="newSalaryChanges" name="newSalaryChanges" required>
+
+                    <label for="newMaxIncrement">New Maximum % Increment allowed:</label>
+                    <input type="number" id="newMaxIncrement" name="newMaxIncrement" required>
+
+                    <button type="submit">Update</button>
+                </form>
+                <button id="backToDetailsFromUpdate">Back</button>
+            </div>
+        </div>
+    </div>
+    <script>
+         function navigateToPage(page) {
+            window.location.href = page;
+        }
+        let currentSalaryId = null;
+
+        document.getElementById('salary-form').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            const employeeName = document.getElementById('employeeName').value;
+            const basicSalary = parseFloat(document.getElementById('basicSalary').value);
+            const tds = parseFloat(document.getElementById('tds').value);
+            const salaryChanges = parseFloat(document.getElementById('salaryChanges').value);
+            const maxIncrement = parseFloat(document.getElementById('maxIncrement').value);
+
+            const tdsAmount = (tds / 100) * basicSalary;
+            const netSalary = basicSalary - tdsAmount + salaryChanges;
+
+            const salaryData = {
+                employeeName,
+                basicSalary,
+                tds,
+                netSalary,
+                salaryChanges,
+                maxIncrement
+            };
+
+            try {
+                const response = await fetch('/api/salaries', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(salaryData)
+                });
+
+                const data = await response.json();
+                currentSalaryId = data.id;
+                displaySalaryDetails(data);
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        });
+
+        document.getElementById('past-change-form').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            const changeType = document.getElementById('changeType').value;
+            const percentageChange = parseFloat(document.getElementById('percentageChange').value);
+            const newSalary = parseFloat(document.getElementById('newSalary').value);
+            const remarks = document.getElementById('remarks').value;
+
+            const changeData = {
+                salaryId: currentSalaryId,
+                changeType,
+                percentageChange,
+                newSalary,
+                remarks
+            };
+
+            try {
+                const response = await fetch('/api/salaryChanges', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(changeData)
+                });
+
+                const data = await response.json();
+                addChangeToTable(data);
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        });
+        document.getElementById('update-salary-form').addEventListener('submit', async function(event) {
+    event.preventDefault();
+    const newBasicSalary = parseFloat(document.getElementById('newBasicSalary').value);
+    const newTDS = parseFloat(document.getElementById('newTDS').value);
+    const newSalaryChanges = parseFloat(document.getElementById('newSalaryChanges').value);
+    const newMaxIncrement = parseFloat(document.getElementById('newMaxIncrement').value);
+
+    const newTDSAmount = (newTDS / 100) * newBasicSalary;
+    const newNetSalary = newBasicSalary - newTDSAmount + newSalaryChanges;
+
+    const updatedSalaryData = {
+        basicSalary: newBasicSalary,
+        tds: newTDS,
+        netSalary: newNetSalary, // Update netSalary here
+        salaryChanges: newSalaryChanges,
+        maxIncrement: newMaxIncrement
+    };
+
+    try {
+        const response = await fetch(`/api/salaries/${currentSalaryId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(updatedSalaryData)
+        });
+
+        const updatedData = await response.json();
+        displaySalaryDetails(updatedData);
+        // Hide the update form after updating
+        document.getElementById('updateSalary').style.display = 'none';
+        // Show the salary details again
+        document.getElementById('salaryDetails').style.display = 'block';
+    } catch (error) {
+        console.error('Error:', error);
+    }
+});
+        document.getElementById('viewPastChanges').addEventListener('click', async function() {
+            document.getElementById('salaryDetails').style.display = 'none';
+            document.getElementById('pastChanges').style.display = 'block';
+
+            try {
+                const response = await fetch(`/api/salaryChanges/${currentSalaryId}`);
+                const changes = await response.json();
+                const pastChangesTable = document.getElementById('pastChangesTable');
+                pastChangesTable.innerHTML = '';
+                changes.forEach(change => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${new Date(change.date).toLocaleDateString()}</td>
+                        <td>${change.changeType}</td>
+                        <td>${change.percentageChange}%</td>
+                        <td>Rs. ${change.newSalary}</td>
+                        <td>${change.remarks}</td>
+                    `;
+                    pastChangesTable.appendChild(row);
+                });
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        });
+
+        document.getElementById('viewEmployeeBenefits').addEventListener('click', function() {
+            document.getElementById('salaryDetails').style.display = 'none';
+            document.getElementById('employeeBenefits').style.display = 'block';
+        });
+
+        document.getElementById('updateSalaryDetail').addEventListener('click', function() {
+            document.getElementById('salaryDetails').style.display = 'none';
+            document.getElementById('updateSalary').style.display = 'block';
+        });
+
+        document.getElementById('backToDetailsFromChanges').addEventListener('click', function() {
+            document.getElementById('pastChanges').style.display = 'none';
+            document.getElementById('salaryDetails').style.display = 'block';
+        });
+
+        document.getElementById('backToDetailsFromBenefits').addEventListener('click', function() {
+            document.getElementById('employeeBenefits').style.display = 'none';
+            document.getElementById('salaryDetails').style.display = 'block';
+        });
+
+        document.getElementById('backToDetailsFromUpdate').addEventListener('click', function() {
+            document.getElementById('updateSalary').style.display = 'none';
+            document.getElementById('salaryDetails').style.display = 'block';
+        });
+
+        function displaySalaryDetails(data) {
+            document.getElementById('salaryDataInput').style.display = 'none';
+            document.getElementById('salaryDetails').style.display = 'block';
+            document.getElementById('displayEmployeeName').innerText = data.employeeName;
+            document.getElementById('displayBasicSalary').innerText = data.basicSalary.toFixed(2);
+            document.getElementById('displayNetSalary').innerText = data.netSalary.toFixed(2);
+            document.getElementById('displayTDS').innerText = data.tds.toFixed(2);
+            document.getElementById('displaySalaryChanges').innerText = data.salaryChanges.toFixed(2);
+            document.getElementById('displayMaxIncrement').innerText = data.maxIncrement.toFixed(2);
+        }
+
+        function addChangeToTable(change) {
+            const pastChangesTable = document.getElementById('pastChangesTable');
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${new Date(change.date).toLocaleDateString()}</td>
+                <td>${change.changeType}</td>
+                <td>${change.percentageChange}%</td>
+                <td>Rs. ${change.newSalary}</td>
+                <td>${change.remarks}</td>
+            `;
+            pastChangesTable.appendChild(row);
+        }
+        // script.js
+document.addEventListener('DOMContentLoaded', function() {
+    var dropdowns = document.querySelectorAll('.dropdown-btn');
+    dropdowns.forEach(function(dropdown) {
+        dropdown.addEventListener('click', function() {
+            this.classList.toggle('active');
+            var dropdownContent = this.nextElementSibling;
+            if (dropdownContent.style.display === 'block') {
+                dropdownContent.style.display = 'none';
+            } else {
+                dropdownContent.style.display = 'block';
+            }
+        });
+    });
+});
+
+    </script>
+</body>
+</html>

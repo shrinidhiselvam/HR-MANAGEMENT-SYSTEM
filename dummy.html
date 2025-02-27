@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <style>
+        /* Your CSS styles */
+        .active {
+            background-color: lightblue; /* Example style for active buttons */
+        }
+        .dropdown-container {
+            display: none; /* Hide dropdowns by default */
+        }
+    </style>
+</head>
+<body>
+    <header class="navbar">
+        <nav>
+            <ul>
+                <li><a id="nav-title" href="#"></a></li>
+            </ul>
+            <button class="logout">Logout</button>
+        </nav>
+    </header>
+    <div class="container">
+        <aside class="sidebar" id="sidebar">
+            <!-- Sidebar content will be dynamically updated -->
+        </aside>
+        <main class="content">
+            <h1 id="welcome-message">Welcome</h1>
+            <div class="button-grid">
+                <!-- Your button grid content -->
+            </div>
+        </main>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Fetch the username from the session and update the welcome message
+            fetch('/get-username')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.username) {
+                        document.getElementById('welcome-message').textContent = `Welcome, ${data.username}`;
+                    } else {
+                        console.error('No username found in response', data);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching username:', error);
+                });
+
+            var dropdowns = document.querySelectorAll('.dropdown-btn');
+            dropdowns.forEach(function(dropdown) {
+                dropdown.addEventListener('click', function() {
+                    this.classList.toggle('active');
+                    var dropdownContent = this.nextElementSibling;
+                    if (dropdownContent.style.display === "block") {
+                        dropdownContent.style.display = "none";
+                    } else {
+                        dropdownContent.style.display = "block";
+                    }
+                });
+            });
+
+            var logoutButton = document.querySelector('.logout');
+            logoutButton.addEventListener('click', function() {
+                // Handle logout
+                fetch('/logout', {
+                    method: 'POST',
+                    credentials: 'same-origin'
+                })
+                .then(response => {
+                    if (response.ok) {
+                        window.location.href = '/login';
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

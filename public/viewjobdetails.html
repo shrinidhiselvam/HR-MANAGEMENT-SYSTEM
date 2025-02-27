@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Job Details</title>
+    <style>
+        /* viewjobdetails.css */
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    color: #333;
+    justify-content: center;
+}
+
+/* Container styling */
+.job-container {
+    width: 68%;
+    margin-left: 290px;
+    margin-bottom: 20px;
+    padding: 90px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Title styling */
+.job-title {
+    font-weight: bold;
+    font-size: x-large;
+    color: #333;
+    margin-bottom: 5px;
+}
+
+/* Description styling */
+.job-description {
+    font-size: 1rem;
+    color: #666;
+    margin-bottom: 10px;
+}
+
+/* Details section */
+.job-details {
+    margin-top: 10px;
+}
+
+/* Specific detail styling */
+.job-detail-label {
+    padding-left: 20px;
+    font-weight: bold;
+    font-size: large;
+    color: #555;
+}
+
+.job-detail-value {
+    margin-left: 10px;
+    font-size: large;
+    color: #777;
+}
+
+/* Remove button styling */
+.remove-button {
+    margin-top: 20px; /* Added margin-top for gap */
+    background-color: #005960;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.remove-button:hover {
+    background-color: #00454a;
+}
+
+    </style>
+</head>
+
+<body>
+    <div id="navbar-placeholder"></div>
+    <div id="sidebar-placeholder"></div>
+    
+    <button class="back-button" onclick="window.location.href='jobdetails.html'">Back</button>
+
+    <div class="job-list">
+        <!-- Job items will be dynamically added here -->
+    </div>
+
+    <script>
+        // viewjobdetails.js
+
+fetch('/get-jobs')
+    .then(response => response.json())
+    .then(jobs => {
+        const jobList = document.querySelector('.job-list');
+
+        jobs.forEach(job => {
+            const jobElement = createJobElement(job); // Create a function to create job elements
+            jobList.appendChild(jobElement);
+        });
+    })
+    .catch(error => {
+        console.error('Error fetching job details:', error);
+        // Display an error message
+    });
+
+function createJobElement(job) {
+    const jobElement = document.createElement('div');
+    jobElement.classList.add('job-container');
+    jobElement.setAttribute('data-job-id', job._id); // Store job ID in data attribute
+
+    const titleElement = document.createElement('h3');
+    titleElement.classList.add('job-title');
+    titleElement.textContent = job.jobTitle;
+
+    const descriptionElement = document.createElement('p');
+    descriptionElement.classList.add('job-description');
+    descriptionElement.innerHTML = `<span class="job-detail-label">Job Description:</span> <span class="job-detail-value">${job.jobDescription}</span>`;
+
+    const skillsElement = document.createElement('p');
+    skillsElement.classList.add('job-detail');
+    skillsElement.innerHTML = `<span class="job-detail-label">Skills:</span> <span class="job-detail-value">${job.skills}</span>`;
+
+    const qualificationsElement = document.createElement('p');
+    qualificationsElement.classList.add('job-detail');
+    qualificationsElement.innerHTML = `<span class="job-detail-label">Qualifications:</span> <span class="job-detail-value">${job.qualifications}</span>`;
+
+    const modeElement = document.createElement('p');
+    modeElement.classList.add('job-detail');
+    modeElement.innerHTML = `<span class="job-detail-label">Mode:</span> <span class="job-detail-value">${job.mode}</span>`;
+
+    const typeElement = document.createElement('p');
+    typeElement.classList.add('job-detail');
+    typeElement.innerHTML = `<span class="job-detail-label">Type:</span> <span class="job-detail-value">${job.type}</span>`;
+
+    const salaryElement = document.createElement('p');
+    salaryElement.classList.add('job-detail');
+    salaryElement.innerHTML = `<span class="job-detail-label">Salary:</span> <span class="job-detail-value">${job.salaryMin} - ${job.salaryMax}</span>`;
+
+    const removeButton = document.createElement('button');
+    removeButton.classList.add('remove-button');
+    removeButton.textContent = 'Remove';
+    removeButton.addEventListener('click', () => removeJob(job._id));
+
+    jobElement.appendChild(titleElement);
+    jobElement.appendChild(descriptionElement);
+    jobElement.appendChild(skillsElement);
+    jobElement.appendChild(qualificationsElement);
+    jobElement.appendChild(modeElement);
+    jobElement.appendChild(typeElement);
+    jobElement.appendChild(salaryElement);
+    jobElement.appendChild(removeButton);
+
+    return jobElement;
+}
+
+function removeJob(jobId) {
+    fetch(`/remove-job/${jobId}`, {
+        method: 'DELETE'
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log('Job removed:', data);
+
+        // Remove the job element from the page
+        const jobElement = document.querySelector(`.job-container[data-job-id="${jobId}"]`);
+        if (jobElement) {
+            jobElement.remove();
+        } else {
+            console.warn(`Job element with ID ${jobId} not found in the DOM.`);
+        }
+    })
+    .catch(error => {
+        console.error('Error removing job:', error);
+        // Display an error message
+    });
+}
+
+    </script>
+    <script>
+        function loadHTML(id, url) {
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', url, true);
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    document.getElementById(id).innerHTML = xhr.responseText;
+                    // Initialize dropdowns after sidebar is loaded
+                    if (id === 'sidebar-placeholder') {
+                        initializeDropdowns();
+                    }
+                }
+            };
+            xhr.send();
+        }
+
+        function initializeDropdowns() {
+            console.log('Initializing dropdowns...');
+            var dropdowns = document.querySelectorAll('.dropdown-btn');
+            dropdowns.forEach(function(dropdown) {
+                dropdown.addEventListener('click', function() {
+                    this.classList.toggle('active');
+                    var dropdownContent = this.nextElementSibling;
+                    if (dropdownContent.style.display === 'block') {
+                        dropdownContent.style.display = 'none';
+                    } else {
+                        dropdownContent.style.display = 'block';
+                    }
+                });
+            });
+            console.log('Dropdowns initialized');
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            loadHTML('navbar-placeholder', 'navbar.html');
+            loadHTML('sidebar-placeholder', 'sidebar.html');
+        });
+    </script>
+</body>
+</html>

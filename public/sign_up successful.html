@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up Successful</title>
+    <!-- Include any CSS styles here -->
+    <style>
+        /* Your CSS styles here */
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Sign Up Successful</h2>
+        <div class="registration-details">
+            <p>Sign Up Successful!</p>
+            <p id="tempIdDisplay"></p>
+        </div>
+    </div>
+
+    <!-- JavaScript to fetch and display tempId -->
+    <script>
+        // Fetch tempId from URL query parameter
+        const urlParams = new URLSearchParams(window.location.search);
+        const tempId = urlParams.get('tempId');
+
+        // Display tempId in the page
+        const tempIdDisplay = document.getElementById('tempIdDisplay');
+        if (tempIdDisplay) {
+            tempIdDisplay.textContent = `Temp ID: ${tempId}`;
+        } else {
+            console.error('Element with id "tempIdDisplay" not found.');
+        }
+    </script>
+</body>
+</html>

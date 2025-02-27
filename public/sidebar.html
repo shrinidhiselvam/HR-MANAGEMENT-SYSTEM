@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sidebar</title>
+    <style>
+        #sidebar-placeholder {
+            position: fixed;
+            top: 50px; /* Adjust to accommodate navbar height */
+            left: 0;
+            width: 200px; /* Adjust width as needed */
+            height: calc(100vh - 50px); /* Adjust height to fit remaining viewport */
+            background-color: #555; /* Example background color */
+        }
+    
+        .sidebar {
+            width: 240px;
+            background-color: #ffffff;
+            padding: 20px;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+            position: fixed;
+            top: 70px;
+            bottom: 0;
+            overflow-y: auto;
+            transition: transform 0.3s ease-in-out;
+            z-index: 900;
+        }
+
+        .sidebar ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .sidebar ul li {
+            margin-bottom: 15px;
+        }
+
+        .sidebar ul li a, .dropdown-btn {
+            text-decoration: none;
+            color: #333;
+            font-weight: bold;
+            display: block;
+            padding: 8px 12px;
+            border-radius: 4px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .sidebar ul li a:hover, .dropdown-btn:hover {
+            background-color: #e0e0e0;
+            color: #094b5f;
+        }
+
+        .dropdown-container {
+            display: none;
+            margin-top: 10px;
+            padding-left: 20px;
+            margin-left: 20px;
+            font-size: 14px;
+        }
+
+        .dropdown-btn::after {
+            content: ' \25BC';
+            float: right;
+        }
+
+        .dropdown-btn.active::after {
+            content: ' \25B2';
+        }
+    </style>
+</head>
+<body>
+    <aside class="sidebar" id="sidebar">
+        <ul>
+            <li><a href="per1.html">Personal Information</a></li>
+            <li><a href="applicantform.html">Employee Details</a></li>
+            <li class="dropdown">
+                <span class="dropdown-btn">Job Details</span>
+                <ul class="dropdown-container">
+                    <li><a href="jobdetails.html">Add Job Details</a></li>
+                    <li><a href="viewjobdetails.html">View Job Details</a></li>
+                </ul>
+            </li>
+            <li class="dropdown">
+                <span class="dropdown-btn">Roles</span>
+                <ul class="dropdown-container">
+                    <li><a href="roles.html">Customize Roles</a></li>
+                    <li><a href="display.html">View Roles</a></li>
+                </ul>
+            </li>
+            <li><a href="roundcustomization.html">Customize Rounds</a></li>
+            <li><a href="display.html">Selection Process</a></li>
+            <li class="dropdown">
+                <span class="dropdown-btn">Skill Inventory</span>
+                <ul class="dropdown-container">
+                    <li><a href="applicant.html">Add Applicant Skills</a></li>
+                    <li><a href="viewapplicant.html">View Applicant Skills</a></li>
+                </ul>
+            </li>
+            <li><a href="">Salary Benefits</a></li>
+            <li class="dropdown">
+                <span class="dropdown-btn">Employee Benefits</span>
+                <ul class="dropdown-container">
+                    <li><a href="benefits.html">Add Employee Benefits</a></li>
+                    <li><a href="viewbenefits.html">View Employee Benefits</a></li>
+                </ul>
+            </li>
+            <li><a href="#link7">Employee Performance Data</a></li>
+            <li class="dropdown">
+                <span class="dropdown-btn">Employee Survey Data</span>
+                <ul class="dropdown-container">
+                    <li><a href="survey1.html">Onboarding Survey</a></li>
+                    <li><a href="survey2.html">Engagement Survey</a></li>
+                    <li><a href="survey3.html">Exit Survey</a></li>
+                </ul>
+            </li>
+        </ul>
+    </aside>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var dropdowns = document.querySelectorAll('.dropdown-btn');
+            dropdowns.forEach(function(dropdown) {
+                dropdown.addEventListener('click', function() {
+                    this.classList.toggle('active');
+                    var dropdownContent = this.nextElementSibling;
+                    if (dropdownContent.style.display === 'block') {
+                        dropdownContent.style.display = 'none';
+                    } else {
+                        dropdownContent.style.display = 'block';
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Sidebar</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            background-color: #f8f9fa;
+        }
+
+        .navbar {
+            background: linear-gradient(90deg, #094b5f, #0056b3);
+            color: white;
+            padding: 15px 30px;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .navbar nav ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+        }
+
+        .navbar nav ul li {
+            margin: 0 15px;
+        }
+
+        .navbar nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 24px;
+            padding: 10px 20px;
+            border-radius: 10px;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        .navbar nav ul li a:hover {
+            background-color: #094b5f;
+            transform: scale(1.1);
+        }
+
+        .logout {
+            padding: 10px 20px;
+            background-color: #ffffff;
+            color: black;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
+            margin-left: 1080px;
+        }
+
+        .logout:hover {
+            background-color: #094b5f;
+            color: white;
+            transform: scale(1.1);
+        }
+
+        .sidebar {
+            width: 240px;
+            background-color: #ffffff;
+            padding: 20px;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+            position: fixed;
+            top: 70px; /* Adjust this value according to the navbar height */
+            bottom: 0;
+            overflow-y: auto;
+            z-index: 1000;
+        }
+
+        .sidebar ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .sidebar ul li {
+            margin-bottom: 15px;
+        }
+
+        .sidebar ul li a {
+            text-decoration: none;
+            color: #333;
+            font-weight: bold;
+            display: block;
+            padding: 8px 12px;
+            border-radius: 4px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .sidebar ul li a:hover {
+            background-color: #e0e0e0;
+            color: #094b5f;
+        }
+
+        .container {
+            display: flex;
+            flex: 1;
+            margin-top: 70px; /* Adjust this value according to the navbar height */
+        }
+
+        .content {
+            flex: 1;
+            margin-left: 260px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            overflow-y: auto;
+            transition: margin-left 0.3s ease-in-out;
+        }
+    </style>
+</head>
+<body>
+    <header class="navbar">
+        <nav>
+            <ul>
+                <li><a id="nav-title" href="#">Recruitment Management</a></li>
+            </ul>
+            <button class="logout">Logout</button>
+        </nav>
+    </header>
+    <div class="container">
+        <aside class="sidebar" id="sidebar">
+            <ul>
+                <li><a href="#" onclick="navigateToPage('per1.html')">Personal Details</a></li>
+                <li><a href="#" onclick="navigateToPage('hrReports.html')">Employee Details</a></li>
+                <li><a href="#" onclick="navigateToPage('timeOffice.html')">Job Details</a></li>
+                <li><a href="#" onclick="navigateToPage('payroll.html')">Skill Inventory</a></li>
+                <li><a href="#" onclick="navigateToPage('hrReports.html')">Salary Benefits</a></li>
+                <li><a href="#" onclick="navigateToPage('hrReports.html')">Employee Benefits Information</a></li>
+                <li><a href="#" onclick="navigateToPage('hrReports.html')">Employee Performance Data</a></li>
+                <li><a href="#" onclick="navigateToPage('hrReports.html')">Employee Survey Data</a></li>
+            </ul>
+        </aside>
+        <main class="content">
+            <!-- Main content goes here -->
+        </main>
+    </div>
+
+    <script>
+        function navigateToPage(page) {
+            window.location.href = page;
+        }
+    </script>
+</body>
+</html>

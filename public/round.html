@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Round 4</title>
+     <!-- Update CSS file as per round -->
+    <style>
+        /* Reset and general styling */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f2f5;
+    margin-top: 120px;
+    margin-left: 300px;
+}
+
+h1 {
+    margin-top: 20px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+thead {
+    background-color: #094b5f; /* Changed to #094b5f */
+    color: #fff;
+}
+
+th, td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+#submitBtn {
+    margin-top: 20px;
+    padding: 10px 15px;
+    background-color: #094b5f; /* Changed to #094b5f */
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#submitBtn:hover {
+    background-color: #287289; /* Darker shade of #094b5f */
+}
+        .fail {
+            border: 2px solid red;
+        }
+    </style>
+</head>
+<body>
+    <div id="navbar-placeholder"></div>
+    <div id="sidebar-placeholder"></div>
+
+    <h1 id="roundName">Loading...</h1>
+
+    <table>
+        <thead>
+            <tr id="tableHeader">
+                <th>NAME</th>
+                <th>EMAIL</th>
+                <!-- Section headers or single marks header will be added here dynamically -->
+                <th>CUMULATIVE MARKS</th>
+                <th>GRADE</th>
+            </tr>
+        </thead>
+        <tbody id="applicantsTable">
+            <!-- Applicants will be populated here dynamically -->
+        </tbody>
+    </table>
+
+    <button id="submitBtn">Submit</button>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const role = urlParams.get('role');
+
+            let sections = [];
+            let passMarks = [];
+            let lowestGrade = '';
+            let hasSections = false;
+            let gradingLevels;
+
+            // Fetch round details for current round (e.g., Round 4)
+            try {
+                const roundResponse = await fetch(`/getRoundDetails?role=${role}&round=4`); // Update round number dynamically
+                if (!roundResponse.ok) throw new Error('Error fetching round details');
+                const roundData = await roundResponse.json();
+                const round = roundData.rounds.find(r => r.round === 4); // Update round number dynamically
+
+                document.getElementById('roundName').textContent = `${round.description} - ${role}`;
+                sections = round.sections || [];
+                passMarks = sections.map(section => section.passMarks);
+                hasSections = sections.length > 0;
+
+                // Update table headers if necessary
+                const headerRow = document.getElementById('tableHeader');
+                if (hasSections) {
+                    sections.forEach((section, index) => {
+                        const th = document.createElement('th');
+                        th.textContent = section.section;
+                        headerRow.insertBefore(th, headerRow.children[headerRow.children.length - 2]);
+                    });
+                } else {
+                    const th = document.createElement('th');
+                    th.textContent = 'MARKS';
+                    headerRow.insertBefore(th, headerRow.children[headerRow.children.length - 2]);
+                }
+            } catch (error) {
+                console.error('Error fetching round details:', error);
+                alert('Error fetching round details. Please refresh the page.');
+                return;
+            }
+
+            // Fetch grading levels (if necessary)
+            try {
+                const gradingResponse = await fetch(`/getGradingSystem?role=${role}`);
+                if (!gradingResponse.ok) throw new Error('Error fetching grading levels');
+                const gradingData = await gradingResponse.json();
+                gradingLevels = gradingData.gradingSystem;
+                lowestGrade = gradingLevels[gradingLevels.length - 1].label;
+            } catch (error) {
+                console.error('Error fetching grading levels:', error);
+                alert('Error fetching grading levels. Please refresh the page.');
+                return;
+            }
+
+            // Fetch applicants for current round (e.g., Round 4) based on previous round (e.g., Round 3) status
+            try {
+                const applicantsResponse = await fetch(`/getApplicantsForRound4?role=${role}`); // Update round number dynamically
+                if (!applicantsResponse.ok) throw new Error('Error fetching applicants');
+                const applicants = await applicantsResponse.json();
+
+                const applicantsTable = document.getElementById('applicantsTable');
+
+                applicants.forEach(applicant => {
+                    const { _id, name, email, rounds } = applicant;
+
+                    const row = document.createElement('tr');
+                    let sectionInputs;
+
+                    if (hasSections) {
+                        sectionInputs = sections.map((section, index) => {
+                            const inputId = `section${index + 1}-${_id}`;
+                            return `<td><input type="number" id="${inputId}" placeholder="Marks for ${section.section}" /></td>`;
+                        }).join('');
+                    } else {
+                        const inputId = `marks-${_id}`;
+                        sectionInputs = `<td><input type="number" id="${inputId}" placeholder="Enter marks" /></td>`;
+                    }
+
+                    row.innerHTML = `
+                        <td>${name}</td>
+                        <td>${email}</td>
+                        ${sectionInputs}
+                        <td id="cumulative-${_id}">0</td>
+                        <td id="grade-${_id}">Calculate Grade</td>
+                    `;
+
+                    applicantsTable.appendChild(row);
+
+                    const inputListener = () => calculateAndDisplayGrade(_id);
+                    if (hasSections) {
+                        sections.forEach((_, index) => {
+                            document.getElementById(`section${index + 1}-${_id}`).addEventListener('input', inputListener);
+                        });
+                    } else {
+                        document.getElementById(`marks-${_id}`).addEventListener('input', inputListener);
+                    }
+                });
+
+                document.getElementById('submitBtn').addEventListener('click', async () => {
+                    const data = collectApplicantsData();
+                    if (!data) {
+                        alert('Please fill in all marks before submitting.');
+                        return;
+                    }
+
+                    try {
+                        const response = await fetch('/marks/submitRound4Marks', { // Update endpoint for round 4
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({ role, data }),
+                        });
+
+                        if (!response.ok) {
+                            const errorMessage = await response.text();
+                            throw new Error(`Server responded with ${response.status}: ${errorMessage}`);
+                        }
+
+                        // Determine if there are more rounds
+                        const roundsResponse = await fetch(`/getRounds?role=${role}`);
+                        if (!roundsResponse.ok) throw new Error('Error fetching rounds');
+                        const roundsData = await roundsResponse.json();
+                        const numberOfRounds = roundsData.rounds.length;
+
+                        // Update current round dynamically
+                        const currentRound = 4; // Update with current round number (e.g., 4 for Round 4)
+                        if (currentRound < numberOfRounds) {
+                            // Navigate to the next round dynamically
+                            window.location.href = `/round${currentRound + 1}.html?role=${role}`; // Update URL dynamically
+                        } else {
+                            // Navigate to the final results page dynamically
+                            window.location.href = `/finalResults.html?role=${role}`; // Update URL dynamically
+                        }
+                    } catch (error) {
+                        console.error('Error submitting marks:', error);
+                        alert(`Error submitting marks: ${error.message}`);
+                    }
+                });
+
+            } catch (error) {
+                console.error('Error fetching applicants:', error);
+                alert('Error fetching applicants. Please refresh the page.');
+            }
+
+            function calculateAndDisplayGrade(applicantId) {
+                const cumulativeMarks = calculateCumulativeMarks(applicantId);
+                document.getElementById(`cumulative-${applicantId}`).textContent = cumulativeMarks;
+
+                let fail = false;
+                if (hasSections) {
+                    sections.forEach((_, index) => {
+                        const marks = parseInt(document.getElementById(`section${index + 1}-${applicantId}`).value, 10) || 0;
+                        const inputElem = document.getElementById(`section${index + 1}-${applicantId}`);
+                        if (marks < passMarks[index]) {
+                            inputElem.classList.add('fail');
+                            fail = true;
+                        } else {
+                            inputElem.classList.remove('fail');
+                        }
+                    });
+                } else {
+                    const marks = parseInt(document.getElementById(`marks-${applicantId}`).value, 10) || 0;
+                    if (marks < passMarks[0]) {
+                        document.getElementById(`marks-${applicantId}`).classList.add('fail');
+                        fail = true;
+                    } else {
+                        document.getElementById(`marks-${applicantId}`).classList.remove('fail');
+                    }
+                }
+
+                const grade = fail ? lowestGrade : calculateGrade(cumulativeMarks);
+                document.getElementById(`grade-${applicantId}`).textContent = grade;
+            }
+
+            function calculateCumulativeMarks(applicantId) {
+                let cumulativeMarks = 0;
+                if (hasSections) {
+                    sections.forEach((_, index) => {
+                        const marks = parseInt(document.getElementById(`section${index + 1}-${applicantId}`).value, 10) || 0;
+                        cumulativeMarks += marks;
+                    });
+                } else {
+                    cumulativeMarks = parseInt(document.getElementById(`marks-${applicantId}`).value, 10) || 0;
+                }
+                return cumulativeMarks;
+            }
+
+            function calculateGrade(marks) {
+                if (!gradingLevels) return 'N/A';
+
+                for (let level of gradingLevels) {
+                    if (marks >= level.min && marks <= level.max) {
+                        return level.label;
+                    }
+                }
+                return 'N/A';
+            }
+            function collectApplicantsData() {
+    const rows = document.querySelectorAll('#applicantsTable tr');
+    const data = Array.from(rows).map(row => {
+        const applicantId = row.querySelector('input').id.split('-')[1];
+        const sections = hasSections
+            ? sections.map((_, index) => ({
+                marks: parseInt(row.querySelector(`#section${index + 1}-${applicantId}`).value, 10) || 0
+            }))
+            : [{
+                marks: parseInt(row.querySelector(`#marks-${applicantId}`).value, 10) || 0
+            }];
+
+        return {
+            applicantId,
+            sections,
+        };
+    });
+    return data;
+}
+
+// Button event listeners
+document.getElementById('home-button').addEventListener('click', () => {
+    window.location.href = '/home.html';
+});
+
+
+
+document.getElementById('logout-button').addEventListener('click', () => {
+    window.location.href = '/logout';
+});
+});
+</script>
+<script>
+    function loadHTML(id, url) {
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', url, true);
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState == 4 && xhr.status == 200) {
+                document.getElementById(id).innerHTML = xhr.responseText;
+                // Initialize dropdowns after sidebar is loaded
+                if (id === 'sidebar-placeholder') {
+                    initializeDropdowns();
+                }
+            }
+        };
+        xhr.send();
+    }
+
+    function initializeDropdowns() {
+        console.log('Initializing dropdowns...');
+        var dropdowns = document.querySelectorAll('.dropdown-btn');
+        dropdowns.forEach(function(dropdown) {
+            dropdown.addEventListener('click', function() {
+                this.classList.toggle('active');
+                var dropdownContent = this.nextElementSibling;
+                if (dropdownContent.style.display === 'block') {
+                    dropdownContent.style.display = 'none';
+                } else {
+                    dropdownContent.style.display = 'block';
+                }
+            });
+        });
+        console.log('Dropdowns initialized');
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        loadHTML('navbar-placeholder', 'navbar.html');
+        loadHTML('sidebar-placeholder', 'sidebar.html');
+    });
+</script>
+
+</body>
+
+</html>
+    

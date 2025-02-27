@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            background-color: #f8f9fa;
+        }
+
+        .navbar {
+            background: linear-gradient(90deg, #094b5f, #0056b3);
+            color: white;
+            padding: 15px 30px;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            display: flex;
+            justify-content: center; /* Center items horizontally */
+            align-items: center;
+        }
+
+        .navbar nav ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+        }
+
+        .navbar nav ul li {
+            margin: 0 15px;
+        }
+
+        .navbar nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 24px; /* Larger font size */
+            padding: 10px 20px; /* Increase padding for better click area */
+            border-radius: 10px; /* Rounded corners */
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        .navbar nav ul li a:hover {
+            background-color: #094b5f;
+            transform: scale(1.1);
+        }
+
+        .logout {
+            padding: 10px 20px;
+            background-color: #ffffff; /* White background */
+            color: black; /* Black text color */
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s; /* Align right */
+            margin-left: 1080px;
+        }
+
+        .logout:hover {
+            background-color: #094b5f;
+            color: white;
+            transform: scale(1.1);
+        }
+
+        .container {
+            display: flex;
+            flex: 1;
+            margin-top: 70px; /* Adjust this value according to the navbar height */
+        }
+
+        .sidebar {
+            width: 240px;
+            background-color: #ffffff;
+            padding: 20px;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+            position: fixed;
+            top: 120px;
+            bottom: 0;
+            overflow-y: auto;
+            transition: transform 0.3s ease-in-out;
+            z-index: 900;
+        }
+
+        .sidebar ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .sidebar ul li {
+            margin-bottom: 15px;
+        }
+
+        .sidebar ul li a, .dropdown-btn {
+            text-decoration: none;
+            color: #333;
+            font-weight: bold;
+            display: block;
+            padding: 8px 12px;
+            border-radius: 4px;
+            transition: background-color 0.3s, color 0.3s;
+            top: 120px;
+        }
+
+        .sidebar ul li a:hover, .dropdown-btn:hover {
+            background-color: #e0e0e0;
+            color: #094b5f;
+        }
+
+        .dropdown-container {
+            display: none;
+            margin-top: 10px;
+            padding-left: 20px;
+            margin-left: 20px;
+            font-size: 14px;
+            color:#817b7b;
+        }
+
+        .dropdown-btn::after {
+            content: ' \25BC';
+            float: right;
+        }
+
+        .dropdown-btn.active::after {
+            content: ' \25B2';
+        }
+
+        .button-grid div {
+            text-align: center;
+        }
+
+        .button-grid img {
+            max-width: 100%;
+            height: auto; /* Maintain aspect ratio */
+            max-height: 120px; /* Set maximum height for consistency */
+            display: block;
+            margin: 0 auto 10px;
+            border-radius: 15px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .button-grid img:hover {
+            transform: scale(1.1); /* Larger scale on hover */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .button-grid button {
+            padding: 10px; /* Smaller padding */
+            background: linear-gradient(135deg, #ffffff, #f7f7f7);
+            color: black;
+            border: 2px solid #fefefe;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 14px; /* Smaller font size */
+            width: 160px; /* Smaller width */
+            height: 80px; /* Smaller height */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.3s, color 0.3s, border-color 0.3s, transform 0.3s;
+            box-shadow: 0 2px 5px rgba(255, 255, 255, 0.2);
+        }
+
+        .button-grid button:hover {
+            background-color: #094b5f;
+            color: white;
+            border-color: #094b5f;
+            transform: translateY(-5px);
+        }
+
+        .button-grid button.active {
+            background-color: #b3d7ff;
+            color: #094b5f;
+            border-color: #094b5f;
+        }
+
+        .content {
+            flex: 1;
+            margin-left: 260px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            overflow-y: auto;
+            transition: margin-left 0.3s ease-in-out;
+        }
+
+        .content h1 {
+            margin-top: 0;
+        }
+
+        .button-grid {
+            margin-top: 30px;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 40px 20px; /* First value is for vertical gap, second for horizontal gap */
+            justify-items: center;
+        }
+        
+        /* New Styles for Attractive Elements */
+        .content h2 {
+            color: #0056b3;
+            border-bottom: 2px solid #0056b3;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        .content ul {
+            list-style-type: square;
+            padding-left: 20px;
+        }
+
+        .content ul li {
+            margin-bottom: 10px;
+        }
+
+        .content ul li a {
+            text-decoration: none;
+            color: #0056b3;
+            transition: color 0.3s, text-decoration 0.3s;
+        }
+
+        .content ul li a:hover {
+            color: #094b5f;
+            text-decoration: underline;
+        }
+
+        /* Adding Animation */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .content h2, .content ul {
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        .navbar nav ul li a {
+            animation: fadeIn 1s ease-in-out;
+            animation-delay: 0.5s;
+        }
+
+        .button-grid div {
+            animation: fadeIn 1s ease-in-out;
+            animation-delay: 1s;
+        }
+
+        /* Style for the dropdown */
+
+    </style>
+</head>
+<body>
+    <header class="navbar">
+        <nav>
+            <ul>
+                <li><a id="nav-title" href="#"></a></li>
+            </ul>
+            <button class="logout">Logout</button>
+        </nav>
+    </header>
+    <div class="container">
+        <aside class="sidebar" id="sidebar">
+            
+            <!-- Sidebar content will be dynamically updated -->
+        </aside>
+        <main class="content">
+            <div class="button-grid">
+                <div>
+                    <img src="recruitment management.jpeg" alt="Image 1">
+                    <button onclick="updateSidebar('recruitment', this)">Recruitment Management</button>
+                </div>
+                <div>
+                    <img src="time office mnagement.jpg" alt="Image 2">
+                    <button onclick="updateSidebar('timeOffice', this)">Time Office Management</button>
+                </div>
+                <div>
+                    <img src="payroll management.jpeg" alt="Image 3">
+                    <button onclick="updateSidebar('payroll', this)">Payroll<br/>Management</button>
+                </div>
+                <div>
+                <img src="leave loan arrears.png" alt="Image 4">
+                <button onclick="updateSidebar('leaveLoan', this)">Leave Loan<br/> Arrears</button>
+                </div>
+                <div>
+                <img src="hr statstory reports.jpeg" alt="Image 5">
+                <button onclick="updateSidebar('hrReports', this)">HR Statutory <br/>Reports</button>
+                </div>
+                <div>
+                <img src="performance management.jpg" alt="Image 6">
+                <button onclick="updateSidebar('performance', this)">Performance Management</button>
+                </div>
+                <div>
+                <img src="trainind management.jpeg" alt="Image 7">
+                <button onclick="updateSidebar('training', this)">Training <br/>Management</button>
+                </div>
+                <div>
+                <img src="employee self service.png" alt="Image 8">
+                <button onclick="updateSidebar('selfService', this)">Employee <br/>Self Service</button>
+                </div>
+                </div>
+                </main>
+                </div>
+                <script>
+                    document.addEventListener('DOMContentLoaded', function() {
+                        var dropdowns = document.querySelectorAll('.dropdown-btn');
+                        dropdowns.forEach(function(dropdown) {
+                            dropdown.addEventListener('click', function() {
+                                this.classList.toggle('active');
+                                var dropdownContent = this.nextElementSibling;
+                                if (dropdownContent.style.display === 'block') {
+                                    dropdownContent.style.display = 'none';
+                                } else {
+                                    dropdownContent.style.display = 'block';
+                                }
+                            });
+                        });
+                    });
+                
+                    function updateSidebar(section, button) {
+                        const sidebar = document.getElementById('sidebar');
+                        let content = '';
+                
+                        // Update navbar title
+                        const navTitle = document.getElementById('nav-title');
+                        navTitle.textContent = button.textContent;
+                
+                        // Remove 'active' class from all buttons
+                        const buttons = document.querySelectorAll('.button-grid button');
+                        buttons.forEach(btn => btn.classList.remove('active'));
+                
+                        // Add 'active' class to the clicked button
+                        button.classList.add('active');
+                
+                        switch (section) {
+                            case 'recruitment':
+                                content = `
+                                <ul>
+                                    <li><a href="per1.html">Personal Information</a></li>
+                                    <li><a href="roles.html">Roles</a></li>
+                                    <li><a href="round.html">Rounds</a></li>
+                                    <li><a href="failed.html">Failed applicants</a></li>
+                                    <li class="dropdown">
+                                        <span class="dropdown-btn">Job Details</span>
+                                        <ul class="dropdown-container">
+                                            <li><a href="jobdetails.html">Add Job Details</a></li>
+                                            <li><a href="viewjobdetails.html">View Job Details</a></li>
+                                        </ul>
+                                    </li>
+                                    <li class="dropdown">
+                                        <span class="dropdown-btn">Skill Inventory</span>
+                                        <ul class="dropdown-container">
+                                            <li><a href="applicant.html">Add Applicant Skills</a></li>
+                                            <li><a href="viewapplicant.html">View Applicant Skills</a></li>
+                                        </ul>
+                                    </li>
+                                    <li><a href="salary.html">Salary Benefits</a></li>
+                                    <li><a href="#link6">Employee Benefits Information</a></li>
+                                    <li><a href="#link7">Employee Performance Data</a></li>
+                                    <li class="dropdown">
+                                        <span class="dropdown-btn">Employee Survey Data</span>
+                                        <ul class="dropdown-container">
+                                            <li><a href="onboard.html">Onboarding Survey</a></li>
+                                            <li><a href="engagement.html">Engagement Survey</a></li>
+                                            <li><a href="exit.html">Exit Survey</a></li>
+                                        </ul>
+                                    </li>
+                                </ul>`;
+                                break;
+                            case 'timeOffice':
+                                content = `
+                                    <ul>
+                                        <li><a href="#link1">Link 1</a></li>
+                                        <li><a href="#link2">Link 2</a></li>
+                                        <li><a href="#link3">Link 3</a></li>
+                                    </ul>`;
+                                break;
+                            case 'payroll':
+                                content = `
+                                    <ul>
+                                        <li><a href="#link1">Link 1</a></li>
+                                        <li><a href="#link2">Link 2</a></li>
+                                        <li><a href="#link3">Link 3</a></li>
+                                    </ul>`;
+                                break;
+                            case 'leaveLoan':
+                                content = `
+                                    <ul>
+                                        <li><a href="#link1">Link 1</a></li>
+                                        <li><a href="#link2">Link 2</a></li>
+                                        <li><a href="#link3">Link 3</a></li>
+                                    </ul>`;
+                                break;
+                            case 'hrReports':
+                                content = `
+                                    <h2>HR Statutory Reports</h2>
+                                    <ul>
+                                        <li><a href="#link1">Link 1</a></li>
+                                        <li><a href="#link2">Link 2</a></li>
+                                        <li><a href="#link3">Link 3</a></li>
+                                    </ul>`;
+                                break;
+                            case 'performance':
+                                content = `
+                                    <h2>Performance Management</h2>
+                                    <ul>
+                                        <li><a href="#link1">Link 1</a></li>
+                                        <li><a href="#link2">Link 2</a></li>
+                                        <li><a href="#link3">Link 3</a></li>
+                                    </ul>`;
+                                break;
+                            case 'training':
+                                content = `
+                                    <h2>Training Management</h2>
+                                    <ul>
+                                        <li><a href="#link1">Link 1</a></li>
+                                        <li><a href="#link2">Link 2</a></li>
+                                        <li><a href="#link3">Link 3</a></li>
+                                    </ul>`;
+                                break;
+                            case 'selfService':
+                                content = `
+                                    <h2>Employee Self Service</h2>
+                                    <ul>
+                                        <li><a href="#link1">Link 1</a></li>
+                                        <li><a href="#link2">Link 2</a></li>
+                                        <li><a href="#link3">Link 3</a></li>
+                                    </ul>`;
+                                break;
+                        }
+                
+                        sidebar.innerHTML = content;
+                
+                        // Reapply event listeners for dropdown buttons
+                        var dropdowns = document.querySelectorAll('.dropdown-btn');
+                        dropdowns.forEach(function(dropdown) {
+                            dropdown.addEventListener('click', function() {
+                                this.classList.toggle('active');
+                                var dropdownContent = this.nextElementSibling;
+                                if (dropdownContent.style.display === 'block') {
+                                    dropdownContent.style.display = 'none';
+                                } else {
+                                    dropdownContent.style.display = 'block';
+                                }
+                            });
+                        });
+                    }
+                
+                    function navigateToPage(page) {
+                        window.location.href = page;
+                    }
+
+                    document.addEventListener('DOMContentLoaded', function() {
+    fetch('/get-username')
+        .then(response => response.json())
+        .then(data => {
+            if (data.username) {
+                document.getElementById('welcome-message').textContent = `Welcome, ${data.username}`;
+            } else {
+                console.error('No username found in response', data);
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching username:', error);
+        });
+
+    var dropdowns = document.querySelectorAll('.dropdown-btn');
+    dropdowns.forEach(function(dropdown) {
+        dropdown.addEventListener('click', function() {
+            this.classList.toggle('active');
+            var dropdownContent = this.nextElementSibling;
+            if (dropdownContent.style.display === "block") {
+                dropdownContent.style.display = "none";
+            } else {
+                dropdownContent.style.display = "block";
+            }
+        });
+    });
+
+    var logoutButton = document.querySelector('.logout');
+    logoutButton.addEventListener('click', function() {
+        // Handle logout
+        fetch('/logout', {
+            method: 'POST',
+            credentials: 'same-origin'
+        })
+        .then(response => {
+            if (response.ok) {
+                window.location.href = '/login';
+            }
+        });
+    });
+});
+
+                    
+                    // Toggle sidebar visibility on double-click
+                    let sidebarVisible = true;
+                    const sidebar = document.getElementById('sidebar');
+                    sidebar.addEventListener('dblclick', function() {
+                        sidebarVisible = !sidebarVisible;
+                        sidebar.style.transform = sidebarVisible ? 'translateX(0)' : 'translateX(-100%)';
+                    });
+                </script>
+                
